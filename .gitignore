@@ -1,3 +1,13 @@
 *~
+arget
+project
+.bloop
+.bsp
+.metals
+.vscode
+*.class
+.bsp
+*.cache
+build-info.scala
 
 

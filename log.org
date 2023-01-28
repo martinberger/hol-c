@@ -1,0 +1,23 @@
+* TODO Set up tests
+* TODO Check [[./build.sbt][build.sbt]] if all parameters are OK
+* TODO Check [[./project/build.properties][./project/build.properties]] if all parameters are OK
+* TODO Think about the right [[./LICENSE][license]] in particular, update year.
+* TODO Put under git control:
+git init
+git add .gitignore .scalafmt.conf README.md build.sbt launch-sbt log.org project src LICENSE activity-tracker.org
+git commit -m "Initial commit."
+* TODO Set up Github as PRIVATE repo
+* TODO Make functional spec of this repo (put in README.md)
+- Goals
+   - [ ] Goal
+   - [ ] Goal   
+- NON Goals
+   - non Goal
+   - non Goal
+* TODO check that repo is indeed private. Do this by running this
+against GitHub's REST API (note rate limited ...):
+
+curl -i https://api.github.com/users/martinberger/repos | grep full_name | grep -i xyz
+
+If you see something like    full_name: martinberger/.... coming up, repo is public
+
