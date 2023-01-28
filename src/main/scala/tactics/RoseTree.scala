@@ -20,10 +20,10 @@ object RoseTree:
                   res <- proves(tmp)
                 ) yield res
 
-def replace[T](rt: RoseTree[T], i: Int, justif: Justif[T]): RoseTree[T] =
-    // println(s"      replace(${rt}, ${i}, ${justif})")
-    rt match
-        case Hole(j) =>
-            if i == j then justif
-            else rt
-        case Justif(prove, children) => Justif(prove, children.map(replace(_, i, justif)))
+    def replace[T](rt: RoseTree[T], i: Int, justif: Justif[T]): RoseTree[T] =
+        // println(s"      replace(${rt}, ${i}, ${justif})")
+        rt match
+            case Hole(j) =>
+                if i == j then justif
+                else rt
+            case Justif(prove, children) => Justif(prove, children.map(replace(_, i, justif)))
