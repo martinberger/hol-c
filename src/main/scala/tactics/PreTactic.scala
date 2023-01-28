@@ -61,7 +61,7 @@ object PreTactic:
                         case (true, true, I) =>
                             if log then println("Init_pretac checks worked")
                             def justification(ts: List[Thm]): Option[Thm] =
-                                // println("Entering  Init_pretac() justification")
+                                println(s"Init_pretac() justification with goal $goal")
                                 ts match
                                     case List() => init(gamma, tm)
                                     case _      => { if log then println(s"Init_pretac, found ${ts.size} ..."); None }
@@ -101,11 +101,13 @@ object PreTactic:
 
             case Lift_pretac(smallTaint: Taint) =>
                 (goal: Goal) =>
+                    println(s"Lift_pretac with goal $goal")
                     val (gamma, tm, bigTaint) = goal
                     TaintLattice.leq(smallTaint, bigTaint) match
                         case true =>
                             val subgoal = (gamma, tm, smallTaint)
                             def justification(ts: List[Thm]): Option[Thm] =
+                                println(s"lift_pretac with goal $goal")
                                 ts match
                                     case List(thm) => lift(thm, bigTaint)
                                     case _ => {
@@ -288,6 +290,7 @@ object PreTactic:
                             val subgoalL = (r :: gamma, l, taint)
                             val subgoalR = (l :: gamma, r, taint)
                             def justification(ts: List[Thm]): Option[Thm] =
+                                println(s"iffI_pretac with goal $goal")
                                 ts match
                                     case List(thm1, thm2) => iffI(thm1, thm2)
                                     case _ => {
@@ -429,6 +432,7 @@ object PreTactic:
                         case Neg(tm1) =>
                             val subgoal = (tm1 :: gamma, FalseProp(), taint)
                             def justification(ts: List[Thm]): Option[Thm] =
+                                println(s"NegI_pretac with goal $goal")
                                 ts match
                                     case List(thm) => negI(thm, tm1)
                                     case _ => {
@@ -446,7 +450,7 @@ object PreTactic:
                             val subgoal2 = (gamma, Neg(tm), taint)
                             println(s"   negE_pretac(${tm}, Neg(${tm}))")
                             def justification(ts: List[Thm]): Option[Thm] =
-                                println(s"   negE_pretac Justification(${ts(0)._2}, ${ts(1)._2}))")
+                                println(s"negE_pretac Justification with goal $goal      and tm = $tm") // (${ts(0)._2}, ${ts(1)._2}))")
                                 ts match
                                     case List(thm1, thm2) => negE(thm1, thm2)
                                     case _ => {
@@ -531,11 +535,12 @@ object PreTactic:
 
             case Raa_pretac(taint: Taint) =>
                 (goal) =>
-                    println(s"Raa_pretac1(${goal})")
+                    // println(s"Raa_pretac1(${goal})")
                     goal match
                         case (gamma, tm, C) =>
                             val subgoal = (Neg(tm) :: gamma, FalseProp(), taint)
                             def justification(ts: List[Thm]): Option[Thm] =
+                                println(s"Raa_pretac with goal $goal and taint $taint")
                                 ts match
                                     case List(thm) => { println(s"Raa_pretac2(${goal})"); raa(thm, tm) }
                                     case _ => {

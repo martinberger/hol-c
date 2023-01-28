@@ -1,8 +1,12 @@
 package Prover
 
 sealed trait RoseTree[T]
-case class Hole[T](i: Int)                                                     extends RoseTree[T]
-case class Justif[T](prove: List[T] => Option[T], children: List[RoseTree[T]]) extends RoseTree[T]
+case class Hole[T](i: Int) extends RoseTree[T] {
+    override def toString(): String = s"[  ${i}  ]"
+}
+case class Justif[T](prove: List[T] => Option[T], children: List[RoseTree[T]]) extends RoseTree[T] {
+    override def toString(): String = s"Justif(..., ${children})"
+}
 
 object RoseTree:
 
@@ -21,9 +25,10 @@ object RoseTree:
                 ) yield res
 
     def replace[T](rt: RoseTree[T], i: Int, justif: Justif[T]): RoseTree[T] =
-        // println(s"      replace(${rt}, ${i}, ${justif})")
+        // println(s"      replace(rt, ${i}, ...)")
         rt match
             case Hole(j) =>
-                if i == j then justif
-                else rt
+                if i == j then { /*println(s"replace: Found holeID $i"); */
+                    justif
+                } else rt
             case Justif(prove, children) => Justif(prove, children.map(replace(_, i, justif)))

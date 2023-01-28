@@ -7,7 +7,7 @@ import Context._
 import ProofState.{HoleID, Goal}
 
 case class GoalContext(
-    val goal: Goal,
+    val goal: Goal, // type Goal = (Context, Term, Taint) defined below
     val goalName: String
 ) {
     override def toString(): String = s"${goal._1} |- ${goal._2} : ${goal._3}"
@@ -22,8 +22,7 @@ class ProofState(
 ) {
     override def toString(): String = s"""
         +++++++++++++++++++++++++++++
-        subgoals = \n${ProofState.subgoalToString(subgoals)}\n
-        justificationTree = ...
+        subgoals = \n${ProofState.subgoalToString(subgoals)}
         selected = ${selected} (as names: ${ProofState.selectedGoalNames(this)})    
         all holeIDs = ${subgoals.keySet}
         +++++++++++++++++++++++++++++
@@ -63,11 +62,12 @@ object ProofState:
 
     def insert(ps: ProofState)(holeID: HoleID, preGoals: PreTactic.PreGoals): ProofState =
         val (newSubgoals, justif) = preGoals
-        val newHoles              = newSubgoals.map(goal => { val holeID = Lib.gensym(); (holeID, goal, Hole[Thm](holeID)) })
+        val newHoles              = newSubgoals.map(goal => { val hid = Lib.gensym(); (hid, goal, new Hole[Thm](hid)) })
         val newChildren           = newHoles.map(_._3)
-        val newJustificationTree  = RoseTree.replace(ps.justificationTree, holeID, Justif[Thm](justif, newChildren))
-        val remainingSubgoals     = ps.subgoals.filter(_._1 != holeID)
-        val allNewSubgoals        = remainingSubgoals ++ newHoles.map(t => (t._1, GoalContext(t._2, s"goal_${t._1}"))).toMap
+        assert(newSubgoals.size == newChildren.size) // TODO remove later, only for debugging
+        val newJustificationTree = RoseTree.replace(ps.justificationTree, holeID, Justif[Thm](justif, newChildren))
+        val remainingSubgoals    = ps.subgoals.filter(_._1 != holeID)
+        val allNewSubgoals       = remainingSubgoals ++ newHoles.map(t => (t._1, GoalContext(t._2, s"goal_${t._1}"))).toMap
         // val remainingGoalStack    = ps.selected.filter(_ != holeID)
         // val newGoalStack          = newHoles.map(_._1) ++ remainingGoalStack
         // ProofState(allNewSubgoals, newJustificationTree, newGoalStack) // TODO should everything be unselected?
@@ -82,7 +82,8 @@ object ProofState:
             case Apply(preTac) =>
                 proofState.selected match
                     case List() => None
-                    case holeID :: _ =>
+                    case holeID :: rest =>
+                        assert(rest.size < 1) // TODO this is not true in general, but true for all tactics implemented.
                         val selectedGoalContext = proofState.subgoals(holeID)
                         PreTactic.apply(preTac, log)(selectedGoalContext.goal) match
                             case None           => None

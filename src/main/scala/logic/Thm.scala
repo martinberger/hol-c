@@ -59,6 +59,7 @@ object ThmClass extends ProofSystem:
             case _ => None
 
     def lift(thm: Thm, bigTaint: Taint): Option[Thm] =
+        println(s"    THM::lift($thm)")
         val (gamma, tm, smallTaint) = thm
         if !leq(smallTaint, bigTaint) then return { println("lift fails"); None }
         Some((gamma, tm, bigTaint))
@@ -180,13 +181,14 @@ object ThmClass extends ProofSystem:
             }
 
     def negI(thm: Thm, phi: Term): Option[Thm] =
+        println(s"   THM::negI(thm = $thm, term = $phi)")
         val (gamma, tm, taint) = thm
         if tm != FalseProp() || !gamma.contains(phi) then
             return {
                 println("negI NONE");
                 None
             }
-        Some((remove(gamma, phi), Neg(tm), taint))
+        Some((remove(gamma, phi), Neg(phi), taint))
 
     def negE(thm1: Thm, thm2: Thm): Option[Thm] = // TODO remove println junk
         // println(s"   negE(${thm1}, ${thm2})")
