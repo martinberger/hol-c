@@ -1,5 +1,6 @@
 ## 28.1.2023
-- TODO Migrate repo for code
-- TODO Debug double-negation proof
-- TODO Streamline tactic generation
+- DONE Migrate repo for code
+- DONE Debug double-negation proof
+- DONE Streamline tactic generation
 - TODO Implement Peirce
+- TODO Clean up debugging artefacts
