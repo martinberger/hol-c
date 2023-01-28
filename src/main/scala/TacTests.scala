@@ -5,7 +5,7 @@ import ThmClass._
 import Context._
 import ProofState.{qed, mkFreshNamed, act}
 import TypeTests.{tvar_T, tvar_X, int_ty, prop_ty}
-import Tactic.{AndThenList}
+import Tactic.{AndThenList, makeGeneric}
 
 class TestCase(
     val name: String,
@@ -172,75 +172,93 @@ object TacticsTests:
     // val t12 = TestCase("A -> !!A : I but with goal stack", gamma_empty, a_implies_neg_neg_a, I, tac12)
 
     val a_iff_neg_neg_a = Equivalence(a, neg_neg_a)
-    val tac13 = Lib.saturate(PrintState())(
-      Lib.sandwich(SelectLast())(
-        List(
-          IffI_pretac(),
-          Lift_pretac(I),
-          NegI_pretac(),
-          NegE_pretac(a),
-          Init_pretac(),
-          Init_pretac(),
-          Raa_pretac(I),
-          NegE_pretac(neg_a),
-          Init_pretac(),
-          Init_pretac()
-        ).map(Apply(_))
-      )
+    val tac13 = List(
+      IffI_pretac(),
+      Lift_pretac(I),
+      NegI_pretac(),
+      NegE_pretac(a),
+      Init_pretac(),
+      Init_pretac(),
+      Raa_pretac(I),
+      NegE_pretac(neg_a),
+      Init_pretac(),
+      Init_pretac()
     )
 
-    val t13 = TestCase("A <-> !!A : I", gamma_empty, a_iff_neg_neg_a, C, tac13)
+    val t13 = TestCase("A <-> !!A : I", gamma_empty, a_iff_neg_neg_a, C, makeGeneric(tac13))
 
-    val neg_b               = Neg(b)
-    val neg_b_implies_neg_a = Implies(neg_b, neg_a)
-    val contraposition      = Implies(a_implies_b, neg_b_implies_neg_a)
+    val gamma_13   = List(neg_a, neg_neg_a)
+    val tac13_8    = List(Init_pretac())
+    val t13_8      = TestCase("", gamma_13, neg_a, I, makeGeneric(tac13_8))
+    val tac13_7    = List(Init_pretac())
+    val t13_7      = TestCase("", gamma_13, neg_neg_a, I, makeGeneric(tac13_7))
+    val tac13_6    = List(NegE_pretac(neg_a), Init_pretac(), Init_pretac())
+    val t13_6      = TestCase("", gamma_13, FalseProp(), I, makeGeneric(tac13_6))
+    val tac13_5    = List(Raa_pretac(I), NegE_pretac(neg_a), Init_pretac(), Init_pretac())
+    val gamma_13_5 = List(neg_neg_a)
+    val t13_5      = TestCase("", gamma_13_5, a, C, makeGeneric(tac13_5))
 
-    // (=, m), m), (not, ((=, x), y)), ((implies, ((=, m), m)), ((=, x), y))) |- ((implies, ((=, m), m)), ((=, x), y)) : I
+    val gamma13_4 = List(a, neg_a)
+    val tac13_4   = List(NegE_pretac(a), Init_pretac(), Init_pretac())
+    val t13_4     = TestCase("", gamma13_4, FalseProp(), I, makeGeneric(tac13_4))
+    val gamma13_3 = List(a)
+    val tac13_3   = List(NegI_pretac(), NegE_pretac(a), Init_pretac(), Init_pretac())
+    val t13_3     = TestCase("", gamma13_3, neg_neg_a, I, makeGeneric(tac13_3))
+    val tac13_2   = List(Lift_pretac(I), NegI_pretac(), NegE_pretac(a), Init_pretac(), Init_pretac())
+    val t13_2     = TestCase("", gamma13_3, neg_neg_a, C, makeGeneric(tac13_2))
 
-    val gamma14 = List(a, neg_b, a_implies_b)
-    val t14     = TestCase("A, !B, A -> B |- A -> B", gamma14, a_implies_b, I, List(Apply(Init_pretac())))
-    val t15     = TestCase("A, !B, A -> B |- A", gamma14, a, I, List(Apply(Init_pretac())))
-    val tac16 = Lib.sandwich(SelectLast())(
-      List(
-        ImpE_pretac(a),
-        Init_pretac(),
-        Init_pretac()
-      ).map(Apply(_))
-    )
-    val t16 = TestCase("A, !B, A -> B |- B", gamma14, b, I, tac16)
-    val t17 = TestCase("A, !B, A -> B |- !B", gamma14, neg_b, I, List(Apply(Init_pretac())))
+    val tac13_1 = IffI_pretac() :: tac13_2 ++ tac13_5
+    val t13_1   = TestCase("", gamma_empty, a_iff_neg_neg_a, C, makeGeneric(tac13_1))
 
-    val tac18 = Lib.saturate(PrintState())(
-      Lib.sandwich(SelectLast())(
-        List(
-          NegE_pretac(b),
-          Init_pretac(),
-          ImpE_pretac(a),
-          Init_pretac(),
-          Init_pretac()
-        ).map(Apply(_))
-      )
-    )
-    val t18 = TestCase("A, !B, A -> B |- FALSE", gamma14, FalseProp(), I, tac18)
+//  val neg_b               = Neg(b)
+//  val neg_b_implies_neg_a = Implies(neg_b, neg_a)
+//  val contraposition      = Implies(a_implies_b, neg_b_implies_neg_a)
 
-    val tac_contraposition = Lib.sandwich(SelectLast())(
-      List(
-        ImpI_pretac(),
-        ImpI_pretac(),
-        NegI_pretac(),
-        NegE_pretac(b),
-        Init_pretac(),
-        ImpE_pretac(a),
-        Init_pretac(),
-        Init_pretac()
-      ).map(Apply(_))
-    )
+// (=, m), m), (not, ((=, x), y)), ((implies, ((=, m), m)), ((=, x), y))) |- ((implies, ((=, m), m)), ((=, x), y)) : I
 
-    val t_contraposition   = TestCase("(A -> B) -> !A -> !B", gamma_empty, contraposition, I, tac_contraposition)
-    val t_peirce           = TestCase("Peirce Law (1)", context0, peirce_law, C, List())                // TODO
-    val t_peirceQuantified = TestCase("Peirce Law (2)", context0, all_quantified_peirce_law, C, List()) // TODO
+// val gamma14 = List(a, neg_b, a_implies_b)
+// val t14     = TestCase("A, !B, A -> B |- A -> B", gamma14, a_implies_b, I, List(Apply(Init_pretac())))
+// val t15     = TestCase("A, !B, A -> B |- A", gamma14, a, I, List(Apply(Init_pretac())))
+// val tac16 = Lib.sandwich(SelectLast())(
+//   List(
+//     ImpE_pretac(a),
+//     Init_pretac(),
+//     Init_pretac()
+//   ).map(Apply(_))
+// )
+// val t16 = TestCase("A, !B, A -> B |- B", gamma14, b, I, tac16)
+// val t17 = TestCase("A, !B, A -> B |- !B", gamma14, neg_b, I, List(Apply(Init_pretac())))
 
-    // val testsNoQED = List(t1, t2) ++ ts
+// val tac18 =
+//    List(
+//      NegE_pretac(b),
+//      Init_pretac(),
+//      ImpE_pretac(a),
+//      Init_pretac(),
+//      Init_pretac()
+//    )
+
+// val t18 = TestCase("A, !B, A -> B |- FALSE", gamma14, FalseProp(), I, makeGeneric(tac18))
+
+// val tac_contraposition = Lib.sandwich(SelectLast())(
+//   List(
+//     ImpI_pretac(),
+//     ImpI_pretac(),
+//     NegI_pretac(),
+//     NegE_pretac(b),
+//     Init_pretac(),
+//     ImpE_pretac(a),
+//     Init_pretac(),
+//     Init_pretac()
+//   ).map(Apply(_))
+// )
+
+// val t_contraposition   = TestCase("(A -> B) -> !A -> !B", gamma_empty, contraposition, I, tac_contraposition)
+// val t_peirce           = TestCase("Peirce Law (1)", context0, peirce_law, C, List())                // TODO
+// val t_peirceQuantified = TestCase("Peirce Law (2)", context0, all_quantified_peirce_law, C, List()) // TODO
+
+// val testsNoQED = List(t1, t2) ++ ts
+
     val testsWithQED = List(
       // t3,
       // t4,
@@ -252,7 +270,15 @@ object TacticsTests:
       // t10,
       // t11,
       // t12,
-      t13
+      // t13,
+      // t13_8,
+      // t13_7,
+      // t13_6,
+      // t13_5,
+      // t13_4,
+      // t13_3,
+      // t13_2,
+      t13_1
       //   t14,
       //   t15,
       //   t16,

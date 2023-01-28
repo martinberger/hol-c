@@ -282,6 +282,7 @@ object PreTactic:
             case IffI_pretac() =>
                 (goal) =>
                     val (gamma, tm, taint) = goal
+                    println(s"IffI with goal = ${goal}")
                     tm match
                         case Equivalence(l, r) =>
                             val subgoalL = (r :: gamma, l, taint)
@@ -293,6 +294,7 @@ object PreTactic:
                                         println("IffI_pretac Fails in justification");
                                         None
                                     }
+                            println(s"IffI with subgoals $subgoalL $subgoalR")
                             Some(List(subgoalL, subgoalR), justification)
                         case _ => { println("IffI_pretac Fails directly"); None }
 
@@ -442,13 +444,13 @@ object PreTactic:
                         case (gamma, FalseProp(), taint) =>
                             val subgoal1 = (gamma, tm, taint)
                             val subgoal2 = (gamma, Neg(tm), taint)
-                            // println(s"   negE_pretac(${tm}, Neg(${tm}))")
+                            println(s"   negE_pretac(${tm}, Neg(${tm}))")
                             def justification(ts: List[Thm]): Option[Thm] =
-                                // println(s"   negE_pretac Justification(${ts(0)._2}, ${ts(1)._2}))")
+                                println(s"   negE_pretac Justification(${ts(0)._2}, ${ts(1)._2}))")
                                 ts match
                                     case List(thm1, thm2) => negE(thm1, thm2)
                                     case _ => {
-                                        // println("NegE_pretac JUSTIFICATION fails");
+                                        println("NegE_pretac JUSTIFICATION fails");
                                         None
                                     }
                             Some(List(subgoal1, subgoal2), justification)
@@ -529,19 +531,19 @@ object PreTactic:
 
             case Raa_pretac(taint: Taint) =>
                 (goal) =>
-                    println(s"Raa_pretac(${goal})")
+                    println(s"Raa_pretac1(${goal})")
                     goal match
                         case (gamma, tm, C) =>
                             val subgoal = (Neg(tm) :: gamma, FalseProp(), taint)
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
-                                    case List(thm) => raa(thm, tm)
+                                    case List(thm) => { println(s"Raa_pretac2(${goal})"); raa(thm, tm) }
                                     case _ => {
-                                        println("Raa_pretac FAILS");
+                                        println("Raa_pretac FAILS 1");
                                         None
                                     }
-                            Some(List(subgoal), justification)
-                        case _ => None
+                            { println(s"Raa_pretac3"); Some(List(subgoal), justification) }
+                        case _ => { println("Raa_pretac FAILS 2"); None }
 
             case Weaken_pretac(tm1: Term) =>
                 (goal) =>
