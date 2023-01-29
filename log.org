@@ -1,9 +1,0 @@
-* DONE Set up tests
-* DONE Check [[./build.sbt][build.sbt]] if all parameters are OK
-* DONE Check [[./project/build.properties][./project/build.properties]] if all parameters are OK
-* DONE Think about the right [[./LICENSE][license]] in particular, update year.
-* DONE Put under git control:
-git init
-git add .gitignore .scalafmt.conf README.md build.sbt launch-sbt log.org project src LICENSE activity-tracker.org
-git commit -m "Initial commit."
-* DONE Set up Github as PRIVATE repo
