@@ -4,8 +4,8 @@ import Context._
 import TypeTests.{tvar_T, tvar_X, int_ty, prop_ty}
 
 object TermTests:
-    val x        = Var("x", tvar_T)
-    val y        = Var("y", tvar_T)
+    val x        = Var("x", Prop())
+    val y        = Var("y", Prop())
     val z        = Var("z", tvar_T)
     val m        = Var("m", int_ty)
     val c        = Const("17", int_ty)
