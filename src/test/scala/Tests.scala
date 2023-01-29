@@ -10,3 +10,4 @@ object Tests {
         println(s"\n\nRan ${n} tests\n")
 
 }
+
