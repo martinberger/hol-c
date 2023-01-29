@@ -1,6 +1,10 @@
+## 30.1.2023
+- TODO Handle failing tests.
+- TODO Make code more presentable
+- TODO Clean up debugging artefacts even more
 ## 29.1.2023
-- TODO Finish Peirce
-- TODO Clean up debugging artefacts
+- DONE Finish Peirce
+- DONE Clean up debugging artefacts
 ## 28.1.2023
 - DONE Migrate repo for code
 - DONE Debug double-negation proof
