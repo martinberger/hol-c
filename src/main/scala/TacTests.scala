@@ -269,9 +269,25 @@ object TacticsTests:
     // val a_implies_b                      = Implies(a, b)
     val open_a_implies_b_close_implies_a = Implies(a_implies_b, a)
     val peirce_law                       = Implies(open_a_implies_b_close_implies_a, a)
-    val tac_peirce: List[PreTactic] = List(ImpI_pretac(), Raa_pretac(I), NegE_pretac(a), Init_pretac(), ImpE_pretac(a_implies_b))
-        ++ ex_falso_quodlibet(x)
-        ++ List(Init_pretac(), Init_pretac())
+    val tac_peirce: List[PreTactic] = List(
+      ImpI_pretac(),
+      Raa_pretac(C),
+      NegE_pretac(a),
+      Lift_pretac(I),
+      Init_pretac(),
+      ImpE_pretac(a_implies_b),
+      ImpI_pretac(),
+      Raa_pretac(I),
+      NegE_pretac(a),
+      Lift_pretac(I),
+      Init_pretac(),
+      Lift_pretac(I),
+      Init_pretac(),
+      Lift_pretac(I),
+      Init_pretac()
+    )
+    //    ++ ex_falso_quodlibet(a)
+    // ++ List(Init_pretac(), Init_pretac())
 
     val t_peirce = TestCase("Peirce Law (1)", context0, peirce_law, C, makeGeneric(tac_peirce, true))
 // val t_peirceQuantified = TestCase("Peirce Law (2)", context0, all_quantified_peirce_law, C, List()) // TODO
