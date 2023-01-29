@@ -15,7 +15,7 @@ class TestCase(
     val tactic: Tactic
 ):
     def this(name: String, ctx: Context, goalTm: Term, taint: Taint, l: List[Tactic]) =
-        this(name, ctx, goalTm, taint, { println(s"---------_> length ${l.size}"); AndThenList(l) })
+        this(name, ctx, goalTm, taint, AndThenList(l))
 
     override def toString(): String = s"""
         name = $name
@@ -26,8 +26,8 @@ class TestCase(
     """
 
     type Handler = (TestCase, Option[ProofState]) => Unit
-    def id: Handler        = { (test, res) => () }
-    def printFail: Handler = { (test, res) => if res == None then println(s"FAIL ${this}") }
+    def id: Handler        = { (_, _) => () }
+    def printFail: Handler = { (_, res) => if res == None then println(s"FAIL ${this}") }
     def runGenericNoQED(resultHandler: Handler = printFail): Option[ProofState] =
         println(s"------------- runGenericNoQED ${name} -------------")
         Lib.reset() // Unfortunately, needed at this point. TODO: remove
@@ -39,11 +39,8 @@ class TestCase(
         res
 
     type QEDHandler = (TestCase, Option[Thm]) => Boolean
-    def idQED: QEDHandler = { (test, res) => true }
-    def printFailQED: QEDHandler = { (test, res) =>
-        if res == None then { println(s"FAIL"); false }
-        else true
-    }
+    def idQED: QEDHandler        = { (_, _) => true }
+    def printFailQED: QEDHandler = { (_, res) => res != None }
     def runGeneric(resultHandler: QEDHandler = printFailQED): Boolean =
         // println(s"------------- runGeneric ${name} -------------")
         Lib.reset() // Unfortunately, needed at this point. TODO: remove
@@ -84,10 +81,6 @@ object TacTests:
     // val simpleTacs2: List[Tactic] = Lib.sandwich(Id())(simpleTacs)
 
     def select(i: Int): Tactic = Select(List(s"goal_${i.toString}"))
-
-    // val ts: List[TestCase] =
-    //     (simpleTacs ++ simpleTacs2)
-    //         .map(tac => TestCase("test2", context0, eq_x_x, I, tac))
 
     val t3 = TestCase("eq_x_x", context0, eq_x_x, I, Apply(Refl_pretac()))
     val t4 = TestCase("eq_x_y |- eq_x_y", context2, eq_x_y, I, Apply(Init_pretac()))
