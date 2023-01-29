@@ -10,9 +10,9 @@ Author notification: April 17, 2023
 
 TODO:
 
-- [ ] Implement Peirce's law
+- [X] Implement Peirce's law
 - [ ] Make code presentable 
-- [ ] Sync paper and code
+- [X] Sync paper and code
 - [ ] Make short documentation on how to use code
 - [ ] Prepare code / repo for publication
 - [ ] Add licence to code
