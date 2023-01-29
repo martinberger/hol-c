@@ -24,13 +24,13 @@ object MyGenerators:
     val genLam           = for { x <- genVar; b <- genTm } yield Lam(x, b)
     def genTm: Gen[Term] = oneOf(genVar, genConst, lzy(genApp), lzy(genLam))
 
-object KindsTests extends Properties("KindsTests"):
+object KindsPropTests extends Properties("KindsPropTests"):
     import MyGenerators.{genKind}
     property("Kinds Equality 1") = forAll(genKind)((k: Kind) => k == k)
     property("Kinds Equality 2") = forAll(genKind)((k: Kind) => ConstructorKind(k) != k)
     property("Kinds Equality 3") = forAll(genKind, genKind)((k1: Kind, k2: Kind) => (k1 == k2) == (ConstructorKind(k1) == ConstructorKind(k2)))
 
-object TypesTests extends Properties("TypesTests"):
+object TypesPropTests extends Properties("TypesPropTests"):
     import MyGenerators.{genTy, genKind}
     property("Type Equality 1") = forAll(genTy)((ty: Ty) => ty == ty)
     property("Type Equality 2") = forAll((x1: String, x2: String) => { (x1 == x2) == (TyVar(x1) == TyVar(x2)) })
@@ -40,7 +40,7 @@ object TypesTests extends Properties("TypesTests"):
     property("Type Equality 4") =
         forAll(genTy, genTy, genTy, genTy)((ty1: Ty, ty2: Ty, ty3: Ty, ty4: Ty) => (ty1 == ty3 && ty2 == ty4) == (TyApp(ty1, ty2) == TyApp(ty3, ty4)))
 
-object FreshnessTests extends Properties("Freshness Tests"): // TODO add tests for substitution
+object FreshnessPropTests extends Properties("FreshnessPropTests"): // TODO add tests for substitution
     import MyGenerators.{genVar, genTy}
     import Lib.{gensym, fresh, freshVar}
     property("gensym always fresh 1") = forAll((x: String) => Lib.gensym() != Lib.gensym())
@@ -51,7 +51,7 @@ object FreshnessTests extends Properties("Freshness Tests"): // TODO add tests f
             freshVar(vs1.toSet, ty1) != freshVar(vs1.toSet, ty2)
         )
 
-object TermTests extends Properties("Term Tests"):
+object TermPropTests extends Properties("TermPropTests"):
     import MyGenerators.{genTm, genVar, genTy, genTyVar}
     import Term.{subst, tySubst}
     property("Term equality 0") = forAll(genTy)((ty: Ty) => Var("", ty) == Var("", ty))
@@ -70,10 +70,3 @@ object TermTests extends Properties("Term Tests"):
                 (Var(x, tv1) == tySubst(Var(x, tv1), ty, tv2))
         })
     )
-
-//    def subst(t: Term, t2: Term, x: Var): Term =
-
-// case class Var(name: String, ty: Ty) extends Term { override def toString: String = s"${name}" }
-// case class Const(c: String, ty: Ty)  extends Term { override def toString: String = s"${c}"    }
-// case class App(l: Term, r: Term)     extends Term
-// case class Lam(x: Var, body: Term)   extends Term
