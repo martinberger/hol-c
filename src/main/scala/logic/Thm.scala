@@ -59,9 +59,9 @@ object ThmClass extends ProofSystem:
             case _ => None
 
     def lift(thm: Thm, bigTaint: Taint): Option[Thm] =
-        println(s"    THM::lift($thm)")
+        // println(s"    THM::lift($thm)")
         val (gamma, tm, smallTaint) = thm
-        if !leq(smallTaint, bigTaint) then return { println("lift fails"); None }
+        if !leq(smallTaint, bigTaint) then return { /*println("lift fails"); */ None }
         Some((gamma, tm, bigTaint))
 
     def beta(gamma: Context, lam: Lam, src: Ty, target: Ty, tm: Term): Option[Thm] =
@@ -101,17 +101,17 @@ object ThmClass extends ProofSystem:
     def iffI(thm1: Thm, thm2: Thm): Option[Thm] =
         val (gamma1, tm1, taint1) = thm1
         val (gamma2, tm2, taint2) = thm2
-        println(s"iffI thm1 = ${thm1}")
-        println(s"iffI thm2 = ${thm2}")
-        if !gamma1.contains(tm2) then { println(s"iffI fails1a, gamma1 = ${gamma1}, tm2 = $tm2"); return None }
-        if !gamma2.contains(tm1) then { println(s"iffI fails1b"); return None }
-        if taint1 != taint2 then { println(s"iffI fails1 taint1 = ${taint1} taint2 = $taint2"); return None }
+        //println(s"iffI thm1 = ${thm1}")
+        //println(s"iffI thm2 = ${thm2}")
+        if !gamma1.contains(tm2) then { /* println(s"iffI fails1a, gamma1 = ${gamma1}, tm2 = $tm2");*/ return None }
+        if !gamma2.contains(tm1) then { /* println(s"iffI fails1b"); */ return None }
+        if taint1 != taint2 then { /* println(s"iffI fails1 taint1 = ${taint1} taint2 = $taint2"); */ return None }
         // if !gamma1.contains(tm2) || !gamma2.contains(tm1) || taint1 != taint2 then {
         //     println(s"iffI fails1 taint1 = ${taint1} taint2 = $taint2"); return None
 
         val gamma3 = remove(gamma1, tm2)
         val gamma4 = remove(gamma2, tm1)
-        if gamma3 != gamma4 then { println("iffI failss"); return None }
+        if gamma3 != gamma4 then { /*println("iffI failss");*/ return None }
         Some((gamma3, Equivalence(tm1, tm2), taint1))
 
     def trueI(gamma: Context): Option[Thm] =
@@ -181,11 +181,11 @@ object ThmClass extends ProofSystem:
             }
 
     def negI(thm: Thm, phi: Term): Option[Thm] =
-        println(s"   THM::negI(thm = $thm, term = $phi)")
+        // println(s"   THM::negI(thm = $thm, term = $phi)")
         val (gamma, tm, taint) = thm
         if tm != FalseProp() || !gamma.contains(phi) then
             return {
-                println("negI NONE");
+                //println("negI NONE");
                 None
             }
         Some((remove(gamma, phi), Neg(phi), taint))
@@ -254,9 +254,9 @@ object ThmClass extends ProofSystem:
         // println(s"raa($thm, $tm)")
         thm match
             case (gamma, FalseProp(), _) if gamma.contains(Neg(tm)) =>
-                println(s"raa Success ctx = ${remove(gamma, Neg(tm))}, formula = ${tm}")
+                //println(s"raa Success ctx = ${remove(gamma, Neg(tm))}, formula = ${tm}")
                 Some((remove(gamma, Neg(tm)), tm, C))
-            case _ => { println("raa FAILS"); None }
+            case _ => { /* println("raa FAILS"); */ None }
 
     def weaken(thm: Thm, tm2: Term): Option[Thm] =
         val (gamma1, tm1, taint) = thm

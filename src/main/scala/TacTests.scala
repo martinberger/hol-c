@@ -38,13 +38,16 @@ class TestCase(
         resultHandler(this, res)
         res
 
-    type QEDHandler = (TestCase, Option[Thm]) => Unit
-    def idQED: QEDHandler        = { (test, res) => () }
-    def printFailQED: QEDHandler = { (test, res) => if res == None then println(s"FAIL") else println("Success") }
-    def runGeneric(resultHandler: QEDHandler = printFailQED): Unit =
-        println(s"------------- runGeneric ${name} -------------")
-        Lib.reset()     // Unfortunately, needed at this point. TODO: remove
-        println(tactic) // TODO remove
+    type QEDHandler = (TestCase, Option[Thm]) => Boolean
+    def idQED: QEDHandler = { (test, res) => true }
+    def printFailQED: QEDHandler = { (test, res) =>
+        if res == None then { println(s"FAIL"); false }
+        else true
+    }
+    def runGeneric(resultHandler: QEDHandler = printFailQED): Boolean =
+        // println(s"------------- runGeneric ${name} -------------")
+        Lib.reset() // Unfortunately, needed at this point. TODO: remove
+        // println(tactic) // TODO remove
         val goal    = (ctx, goalTm, taint)
         val initial = "my_goal"
         val ps      = mkFreshNamed(goal, initial)
@@ -58,7 +61,7 @@ class TestCase(
         //     case Some(thm) => println(s"Just got theorem: ${thm}")
         //     case _         => println("Did not woooork")
 
-object TacticsTests:
+object TacTests:
 
     import TermTests._
     val printState: Tactic = PrintState(false) // For easy global changes of logging
@@ -295,41 +298,46 @@ object TacticsTests:
 // val testsNoQED = List(t1, t2) ++ ts
 
     val testsWithQED = List(
-      t3,
-      t4,
-      t5,
-      t6,
-      t7,
-      t8,
-      t9,
-      t10,
-      t11,
-      t12,
-      t13,
-      t13_8,
-      t13_7,
-      t13_6,
-      t13_5,
-      t13_4,
-      t13_3,
-      t13_2,
-      t13_1,
-      t14,
-      t15,
-      t16,
-      t17,
-      t18,
-      t_contraposition,
-      t_ex_falso_quodlibet,
-      t_peirce
+      ("t3", t3),
+      ("t4", t4),
+      ("t5", t5),
+      ("t6", t6),
+      ("t7", t7),
+      ("t8", t8),
+      ("t9", t9),
+      ("t10", t10),
+      ("t11", t11),
+      ("t12", t12),
+      ("t13", t13),
+      ("t13_8", t13_8),
+      ("t13_7", t13_7),
+      ("t13_6", t13_6),
+      ("t13_5", t13_5),
+      ("t13_4", t13_4),
+      ("t13_3", t13_3),
+      ("t13_2", t13_2),
+      ("t13_1", t13_1),
+      ("t14", t14),
+      ("t15", t15),
+      ("t16", t16),
+      ("t17", t17),
+      ("t18", t18),
+      ("t_contraposition", t_contraposition),
+      ("t_ex_falso_quodlibet", t_ex_falso_quodlibet),
+      ("t_peirce", t_peirce)
     )
     val allTests = /*testsNoQED ++ */ testsWithQED
 
-object TacTests {
     def run(): (Int, Int) =
-        import TacticsTests.{allTests, testsWithQED}
+        var n      = 0
+        var failed = 0
+        // import TacticsTests.{allTests, testsWithQED}
         // allTests.map(_.runGenericNoQED())
-        testsWithQED.map(_.runGeneric())
-        println(s"Found ${allTests.size} tests")
-        (0, 0) // TODO change
-}
+        testsWithQED.foreach(t =>
+            val (name, test) = t
+            n += 1
+            if !test.runGeneric() then
+                failed += 1
+                println(s"   Failed test ${name}")
+        )
+        (n, failed)
