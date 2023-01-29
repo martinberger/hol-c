@@ -295,42 +295,41 @@ object TacticsTests:
 // val testsNoQED = List(t1, t2) ++ ts
 
     val testsWithQED = List(
-      //   t3,
-      //   t4,
-      //   t5,
-      //   t6,
-      //   t7,
-      //   t8,
-      //   t9,
-      //   t10,
-      //   t11,
-      //   t12,
-      //   t13,
-      //   t13_8,
-      //   t13_7,
-      //   t13_6,
-      //   t13_5,
-      //   t13_4,
-      //   t13_3,
-      //   t13_2,
-      //   t13_1,
-      //   t14,
-      //   t15,
-      //   t16,
-      //   t17,
-      //   t18,
-      //   t_contraposition,
-      //   t_ex_falso_quodlibet,
+      t3,
+      t4,
+      t5,
+      t6,
+      t7,
+      t8,
+      t9,
+      t10,
+      t11,
+      t12,
+      t13,
+      t13_8,
+      t13_7,
+      t13_6,
+      t13_5,
+      t13_4,
+      t13_3,
+      t13_2,
+      t13_1,
+      t14,
+      t15,
+      t16,
+      t17,
+      t18,
+      t_contraposition,
+      t_ex_falso_quodlibet,
       t_peirce
     )
     val allTests = /*testsNoQED ++ */ testsWithQED
 
 object TacTests {
-    var n = 0
-    def run(): Int =
+    def run(): (Int, Int) =
         import TacticsTests.{allTests, testsWithQED}
         // allTests.map(_.runGenericNoQED())
         testsWithQED.map(_.runGeneric())
         println(s"Found ${allTests.size} tests")
-        n
+        (0, 0) // TODO change
 }

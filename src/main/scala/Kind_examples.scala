@@ -9,3 +9,5 @@ object KindTests:
     val ckind3          = ConstructorKind(ckind2)
     val tyfunkind_apply = TyFunctionKind()
     val binarytyfunkind = BinaryTyFunctionKind()
+
+    def run(): (Int, Int) = { (0, 0) }

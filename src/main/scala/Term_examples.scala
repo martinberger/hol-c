@@ -33,8 +33,6 @@ object TermTests:
     val lam           = Lam(m, m)
     val app_good      = App(lam, c)
 
-    // val all_quantified_peirce_law        = Forall("x", tvar_T, peirce_law)
-
     val gamma_empty: Context = List()
 
     val a                       = eq_m_m
@@ -42,3 +40,43 @@ object TermTests:
     val a_and_b                 = And(a, b)
     val b_and_a                 = And(b, a)
     val a_and_b_implies_b_and_a = Implies(a_and_b, b_and_a)
+
+    val tests = List(
+      ("a", a),
+      ("b", b),
+      ("a_and_b", a_and_b),
+      ("b_and_a", b_and_a),
+      ("a_and_b_implies_b_and_a", a_and_b_implies_b_and_a),
+      ("x", x),
+      ("y", y),
+      ("z", z),
+      ("m", m),
+      ("c", c),
+      ("p", p),
+      ("fp", fp),
+      ("f2p", f2p),
+      ("c_eq_int", c_eq_int),
+      ("c_eq", c_eq),
+      ("c_eq_2", c_eq_2),
+      ("eq_x_x", eq_x_x),
+      ("eq_x_y", eq_x_y),
+      ("eq_y_x", eq_y_x),
+      ("eq_y_z", eq_y_z),
+      ("eq_x_z", eq_x_z),
+      ("eq_m_m", eq_m_m),
+      ("app_ill_typed", app_ill_typed),
+      ("lam_bad", lam_bad),
+      ("lam_complex", lam_complex),
+      ("lam", lam),
+      ("app_good", app_good)
+    )
+
+    def run(): (Int, Int) =
+        var n      = 0
+        var failed = 0
+        tests.foreach(t =>
+            n += 1
+            val (name, tm) = t
+            if Term.tyInference(tm) == None then { failed += 1; println(s"   Failed test ${name}") }
+        )
+        (n, failed)
