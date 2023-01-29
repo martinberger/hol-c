@@ -55,7 +55,8 @@ object PreTactic:
         pretac match
             case Init_pretac() =>
                 (goal: Goal) =>
-                    if log then println(s"Init_pretac with goal\n   ${goal}")
+                    /*if log then */
+                    println(s"Init_pretac with goal\n   ${goal}")
                     val (gamma, tm, taint) = goal
                     (valid(gamma), gamma.contains(tm), taint) match
                         case (true, true, I) =>
@@ -66,7 +67,7 @@ object PreTactic:
                                     case List() => init(gamma, tm)
                                     case _      => { if log then println(s"Init_pretac, found ${ts.size} ..."); None }
                             Some(List(), justification)
-                        case _ => { if log then println("Init_pretac checks FAILED"); None }
+                        case _ => { println(s"Init_pretac checks FAILED (${(valid(gamma), gamma.contains(tm), taint)})"); None }
 
             case TrueI_pretac() =>
                 (goal: Goal) =>

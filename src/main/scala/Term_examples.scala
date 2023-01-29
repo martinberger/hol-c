@@ -33,10 +33,7 @@ object TermTests:
     val lam           = Lam(m, m)
     val app_good      = App(lam, c)
 
-    val x_implies_y                      = Implies(x, y)
-    val open_x_implies_y_close_implies_x = Implies(x_implies_y, x)
-    val peirce_law                       = Implies(open_x_implies_y_close_implies_x, x)
-    val all_quantified_peirce_law        = Forall("x", tvar_T, peirce_law)
+    // val all_quantified_peirce_law        = Forall("x", tvar_T, peirce_law)
 
     val gamma_empty: Context = List()
 
