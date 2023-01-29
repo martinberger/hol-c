@@ -15,6 +15,6 @@ TODO:
 - [X] Sync paper and code
 - [ ] Make short documentation on how to use code
 - [ ] Prepare code / repo for publication
-- [ ] Add GitHub actions with some basic CI
+- [X] Add GitHub actions with some basic CI
 - [ ] Add licence & copyright to code (if needed)
 - [ ] Make repo public
