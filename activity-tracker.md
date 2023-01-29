@@ -3,6 +3,7 @@
 - TODO Make code more presentable
 - TODO Clean up debugging artefacts even more
 ## 29.1.2023
+- DONE Set up basic CI
 - DONE Finish Peirce
 - DONE Clean up debugging artefacts
 ## 28.1.2023
