@@ -13,9 +13,8 @@ object ThmClass extends ProofSystem:
 
     def init(gamma: Context, phi: Term): Option[Thm] =
         if valid(gamma) && gamma.contains(phi) && Term.check(phi, Prop()) then Some((gamma, phi, I))
-        else { /* println("init NONE"); */
+        else 
             None
-        }
 
     def refl(gamma: Context, tm: Term, ty: Ty): Option[Thm] =
         if valid(gamma) && Term.check(tm, ty) then
@@ -59,9 +58,8 @@ object ThmClass extends ProofSystem:
             case _ => None
 
     def lift(thm: Thm, bigTaint: Taint): Option[Thm] =
-        // println(s"    THM::lift($thm)")
         val (gamma, tm, smallTaint) = thm
-        if !leq(smallTaint, bigTaint) then return { /*println("lift fails"); */ None }
+        if !leq(smallTaint, bigTaint) then return  None 
         Some((gamma, tm, bigTaint))
 
     def beta(gamma: Context, lam: Lam, src: Ty, target: Ty, tm: Term): Option[Thm] =
@@ -101,17 +99,10 @@ object ThmClass extends ProofSystem:
     def iffI(thm1: Thm, thm2: Thm): Option[Thm] =
         val (gamma1, tm1, taint1) = thm1
         val (gamma2, tm2, taint2) = thm2
-        //println(s"iffI thm1 = ${thm1}")
-        //println(s"iffI thm2 = ${thm2}")
-        if !gamma1.contains(tm2) then { /* println(s"iffI fails1a, gamma1 = ${gamma1}, tm2 = $tm2");*/ return None }
-        if !gamma2.contains(tm1) then { /* println(s"iffI fails1b"); */ return None }
-        if taint1 != taint2 then { /* println(s"iffI fails1 taint1 = ${taint1} taint2 = $taint2"); */ return None }
-        // if !gamma1.contains(tm2) || !gamma2.contains(tm1) || taint1 != taint2 then {
-        //     println(s"iffI fails1 taint1 = ${taint1} taint2 = $taint2"); return None
-
+        if !gamma1.contains(tm2) || !gamma2.contains(tm1) || taint1 != taint2 then return None
         val gamma3 = remove(gamma1, tm2)
         val gamma4 = remove(gamma2, tm1)
-        if gamma3 != gamma4 then { /*println("iffI failss");*/ return None }
+        if gamma3 != gamma4 then return None 
         Some((gamma3, Equivalence(tm1, tm2), taint1))
 
     def trueI(gamma: Context): Option[Thm] =
@@ -125,7 +116,6 @@ object ThmClass extends ProofSystem:
             case _                           => None
 
     def conjI(thm1: Thm, thm2: Thm): Option[Thm] =
-        // println(">>>>>>>>>>>>>>>>> conjI")
         val (gamma1, tm1, taint1) = thm1
         val (gamma2, tm2, taint2) = thm2
         if gamma1 != gamma2 || taint1 != taint2 then return None
@@ -165,44 +155,26 @@ object ThmClass extends ProofSystem:
 
     def impI(thm: Thm, tm1: Term): Option[Thm] =
         val (gamma, tm2, taint) = thm
-        if !gamma.contains(tm1) then
-            return { /* println("implI NONE"); */
-                None
-            }
+        if !gamma.contains(tm1) then return None
         Some((remove(gamma, tm1), Implies(tm1, tm2), taint))
 
-    def impE(thm1: Thm, thm2: Thm): Option[Thm] = // TODO remove debug junk
+    def impE(thm1: Thm, thm2: Thm): Option[Thm] = 
         val (gamma2, tm2, taint2) = thm2
         thm1 match
             case (gamma1, Implies(l, r), taint1) if l == tm2 && taint1 == taint2 && gamma1 == gamma2 => Some((gamma1, r, taint1))
-            case _ => {
-                /* println("implE NONE"); */
-                None
-            }
+            case _ => None
 
     def negI(thm: Thm, phi: Term): Option[Thm] =
-        // println(s"   THM::negI(thm = $thm, term = $phi)")
         val (gamma, tm, taint) = thm
-        if tm != FalseProp() || !gamma.contains(phi) then
-            return {
-                //println("negI NONE");
-                None
-            }
+        if tm != FalseProp() || !gamma.contains(phi) then            return None
         Some((remove(gamma, phi), Neg(phi), taint))
 
-    def negE(thm1: Thm, thm2: Thm): Option[Thm] = // TODO remove println junk
-        // println(s"   negE(${thm1}, ${thm2})")
+    def negE(thm1: Thm, thm2: Thm): Option[Thm] = 
         val (gamma1, tm1, taint1) = thm1
         thm2 match
             case (gamma2, Neg(tm2), taint2) if tm1 == tm2 && gamma1 == gamma2 && taint1 == taint2 =>
-                // if tm1 != tm2 then { println(s"tm1 (${tm1}) != tm2 (${tm2})"); return None }
-                // if gamma1 != gamma2 then { println("gamma1 != gamma2"); return None }
-                // if taint1 != taint2 then { println("taint1 != taint2"); return None }
                 Some((gamma1, FalseProp(), taint1))
-            case (_, tm2, _) => {
-                /* println(s"negE NONE: $tm1 =?= ${tm2}"); */
-                None
-            }
+            case _ =>                 None
 
     def allE(thm: Thm, tm: Term): Option[Thm] =
         val (gamma, phi, taint) = thm
@@ -250,105 +222,15 @@ object ThmClass extends ProofSystem:
         if !valid(gamma) || !Term.check(tm, Prop()) then return None
         Some((gamma, Or(tm, Neg(tm)), C))
 
-    def raa(thm: Thm, tm: Term): Option[Thm] = // TODO remove debug junk
-        // println(s"raa($thm, $tm)")
+    def raa(thm: Thm, tm: Term): Option[Thm] = 
         thm match
-            case (gamma, FalseProp(), _) if gamma.contains(Neg(tm)) =>
-                //println(s"raa Success ctx = ${remove(gamma, Neg(tm))}, formula = ${tm}")
-                Some((remove(gamma, Neg(tm)), tm, C))
-            case _ => { /* println("raa FAILS"); */ None }
+            case (gamma, FalseProp(), _) if gamma.contains(Neg(tm)) =>                Some((remove(gamma, Neg(tm)), tm, C))
+            case _ => None 
 
     def weaken(thm: Thm, tm2: Term): Option[Thm] =
         val (gamma1, tm1, taint) = thm
         val gamma2               = tm2 :: gamma1
         if !valid(gamma2) then return None
         Some((gamma2, tm1, taint))
-
-    // def choice(thm: Thm, f0: String): Option[Thm] = // This is N // TODO this is super ugly and too complex, needs refactoring
-    //     val (gamma, tm, taint) = thm
-    //     // TODO: check that f0 is fresh
-    //     tm match
-    //         case Forall(x1, x1_ty, Exists(y1, y1_ty, BinaryPredicate(p, x2, y2))) if Var(x1, x1_ty) == x2 && Var(y1, y1_ty) == y2 =>
-    //             val f         = Var(f0, FunctionTy(x1_ty, y1_ty))
-    //             val choiceThm = Exists(f0, f.ty, Forall(x1, x1_ty, BinaryPredicate(p, Var(x1, x1_ty), App(f, Var(x1, x1_ty)))))
-    //             Some((gamma, choiceThm, CH))
-    //         case _ => None
-
-    // def lift(thm: Thm, newTaint: Taint): Option[Thm] = // This is N5
-    //     val (gamma, tm, oldTaint) = thm
-    //     if !TaintLattice.leq(oldTaint, newTaint) then return None
-    //     Some((gamma, tm, newTaint))
-
-    // def weaken(thm: Thm, x: Var): Option[Thm] = // This is N
-    //     val (gamma, tm, taint) = thm
-    //     val newGamma           = x :: gamma
-    //     if !valid(newGamma) || Context.fv(gamma).contains(x) then return None
-    //     Some((newGamma, tm, taint))
-
-    // def weakExcludedMiddle(gamma: Context, tm: Term): Option[Thm] = // This is N34
-    //     if !valid(gamma) || !Term.check(tm, Prop()) then return None
-    //     Some((gamma, Or(Neg(tm), Neg(Neg(tm))), W))
-
-    // def n36(gamma: Context, tv: TyVar, s: Term, t: Term): Option[Thm] =
-    //     if !valid(gamma) then return None
-    //     if !Term.check(s, SetTy(tv)) || !Term.check(t, SetTy(tv)) then return None
-    //     val tmp1 = UnionSet(tv, s, t)
-    //     val tmp2 = UnionSet(tv, t, s)
-    //     Some((gamma, Equation(tmp1, tmp2, tv), I))
-
-    // def n37(gamma: Context, tv: TyVar): Option[Thm] =
-    //     if !valid(gamma) then return None
-    //     val tmp = FunctionTy(SetTy(tv), SetTy(tv))
-    //     val ty  = TernaryFunctionTy(tmp, tmp, tv, tv)
-    //     val eq  = Equation(FunctComposer(tv, tv, tv, Cmpl(tv), Cmpl(tv)), Identity(tv), tv)
-    //     Some((gamma, eq, C))
-
-    // def n38(thm: Thm): Option[Thm] =
-    //     val (gamma, tm, taint) = thm
-    //     tm match
-    //         case Equation(
-    //               App(f @ Var(_, FunctionTy(ty_f, ty_f_res)), x @ Var(x1, ty_x1)),
-    //               App(g @ Var(_, FunctionTy(ty_g, ty_g_res)), Var(x2, ty_x2)),
-    //               ty
-    //             ) if ty_f == ty_x1 && ty_g == ty_x2 && ty_f_res == ty_g_res && !Context.fv(gamma).contains(x) =>
-    //             Some((gamma, Equation(f, g, ty_f_res), taint))
-    //         case _ => None
-
-    // def n39(thm: Thm): Option[Thm] =
-    //     val (gamma, tm, taint) = thm
-    //     tm match
-    //         case Equivalence(MemberCheck(tv_s, x_s, s), MemberCheck(tv_t, x_t, t))
-    //             if tv_s == tv_t && x_s == x_t && !Context.fv(gamma).contains(x_s) =>
-    //             Some((gamma, Equation(s, t, SetTy(tv_s)), taint))
-    //         case _ => None
-
-    // def n40(gamma: Context): Option[Thm] =
-    //     if !valid(gamma) then return None
-    //     Some((gamma, Equation(App(Lift(), TrueBool()), TrueProp(), Prop()), I))
-
-    // def n41(gamma: Context): Option[Thm] =
-    //     if !valid(gamma) then return None
-    //     Some((gamma, Equation(App(Lift(), FalseBool()), FalseProp(), Prop()), I))
-
-    // def n42(thm: Thm, x: Var, tm: Term): Option[Thm] =
-    //     thm match
-    //         case (gamma, FalseProp(), taint) =>
-    //             val tmp1 = App(tm, x)
-    //             val tmp  = Forall(x.name, x.ty, Neg(tmp1))
-    //             if !gamma.contains(tmp) then return None
-    //             Some((remove(gamma, tmp), Exists(x.name, x.ty, tmp1), C))
-    //         case _ => None
-
-    // def n43(gamma: Context, tv: TyVar): Option[Thm] =
-    //     if !valid(gamma) then return None
-    //     Some((gamma, App(Finite(tv), EmptySet(tv)), I))
-
-    // def n44(thm: Thm, tv: TyVar, x: Var): Option[Thm] =
-    //     val (gamma, tm, taint) = thm
-    //     tm match
-    //         case App(Finite(tv), s) if Term.check(s, SetTy(tv)) && Term.check(x, tv) =>
-    //             val tm = App(Finite(tv), s)
-    //             Some((gamma, UnionSet(tv, tm, SingletonSet(tv, x)), taint))
-    //         case _ => None
 
     def show(thm: Thm): (Context, Term, Taint) = thm
