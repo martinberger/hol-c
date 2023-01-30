@@ -10,7 +10,7 @@ case object CCE extends Taint
 case object W   extends Taint // TODO: Add ordering relations. CURRENTLY WRONG
 case object CH  extends Taint // TODO: Add ordering relations. CURRENTLY WRONG
 
-given CanEqual[Taint, Taint] = CanEqual.derived // TODO: check this defines the right equality
+given CanEqual[Taint, Taint] = CanEqual.derived
 
 // Taint semilattice has this order:
 //
