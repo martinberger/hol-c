@@ -164,8 +164,8 @@ object TacTests:
       NegE_pretac(a),
       Init_pretac(),
       Init_pretac()
-    ).map(Apply(_))
-    val t12 = TestCase("A -> !!A : I but with goal stack", gamma_empty, a_implies_neg_neg_a, I, tac12)
+    )
+    val t12 = TestCase("A -> !!A : I but with goal stack", gamma_empty, a_implies_neg_neg_a, I, makeGeneric(tac12))
 
     val a_iff_neg_neg_a = Equivalence(a, neg_neg_a)
     val tac13 = List(
@@ -289,32 +289,32 @@ object TacTests:
 // val testsNoQED = List(t1, t2) ++ ts
 
     val testsWithQED = List(
-      // ("t3", t3),
-      // ("t4", t4),
-      // ("t5", t5),
-      // ("t6", t6),
-      // ("t7", t7),
-      // ("t8", t8),
-      // ("t9", t9),
-      // ("t10", t10),
-      // ("t11", t11),
-      // ("t12", t12),
-      // ("t13", t13),
-      // ("t13_8", t13_8),
-      // ("t13_7", t13_7),
-      // ("t13_6", t13_6),
-      // ("t13_5", t13_5),
-      // ("t13_4", t13_4),
-      // ("t13_3", t13_3),
-      // ("t13_2", t13_2),
-      // ("t13_1", t13_1),
-      // ("t14", t14),
-      // ("t15", t15),
-      // ("t16", t16),
-      // ("t17", t17),
-      // ("t18", t18),
-      // ("t_contraposition", t_contraposition),
-      // ("t_ex_falso_quodlibet", t_ex_falso_quodlibet),
+      ("t3", t3),
+      ("t4", t4),
+      ("t5", t5),
+      ("t6", t6),
+      ("t7", t7),
+      ("t8", t8),
+      ("t9", t9),
+      ("t10", t10),
+      ("t11", t11),
+      ("t12", t12),
+      ("t13", t13),
+      ("t13_8", t13_8),
+      ("t13_7", t13_7),
+      ("t13_6", t13_6),
+      ("t13_5", t13_5),
+      ("t13_4", t13_4),
+      ("t13_3", t13_3),
+      ("t13_2", t13_2),
+      ("t13_1", t13_1),
+      ("t14", t14),
+      ("t15", t15),
+      ("t16", t16),
+      ("t17", t17),
+      ("t18", t18),
+      ("t_contraposition", t_contraposition),
+      ("t_ex_falso_quodlibet", t_ex_falso_quodlibet),
       ("t_peirce", t_peirce)
     )
     val allTests = /*testsNoQED ++ */ testsWithQED
