@@ -88,20 +88,7 @@ object ProofState:
                         PreTactic.apply(preTac, log)(selectedGoalContext.goal) match
                             case None           => None
                             case Some(preGoals) => Some(insert(proofState)(holeID, preGoals))
-
-            // case Apply(preTac) =>
-            //     val l = getSelectedSubgoals(proofState).toList
-            //     l.foldLeft(Some(proofState))((accu: Option[ProofState], t) => // Note: Type annotation is needed for local type inference
-            //         accu match
-            //             case None => None
-            //             case Some(oldProofState) =>
-            //                 val (holeID, selectedGoalContext) = t
-            //                 PreTactic.apply(preTac, log)(selectedGoalContext.goal) match
-            //                     case None           => { println("act(...) = None"); None }
-            //                     case Some(preGoals) => { println("act(...) = Some(...)"); Some(insert(oldProofState)(holeID, preGoals)) }
-            //     )
             case AndThen(fst, snd) =>
-                // println("ANDTHEN ...")
                 for (
                   tmp <- act(proofState)(fst, log);
                   res <- act(tmp)(snd, log)
@@ -137,15 +124,7 @@ object ProofState:
                 Some(proofState)
 
     def qed(ps: ProofState): Option[Thm] = // This needs to go elsewhere
-        // println("qed ------- 1 ---------")
         if ps.subgoals.size > 0 then return None // is this correct?
-        // println("qed ------- 2 ---------")
         val res = RoseTree.walk(ps.justificationTree)
-        // println("qed ------- 3 ---------")
         res
 
-    def printGoals(ps: ProofState): Unit =
-        val goals = allGoalNames(ps)
-        println("-------- Current subgoals Start --------")
-        println(s"   >>>>>>>>>> ${goals} <<<<<<<<<<")
-        println("-------- Current subgoals End --------")

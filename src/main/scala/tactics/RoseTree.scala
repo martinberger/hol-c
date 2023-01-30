@@ -1,23 +1,15 @@
 package Prover
 
 sealed trait RoseTree[T]
-case class Hole[T](i: Int) extends RoseTree[T] {
-    override def toString(): String = s"[  ${i}  ]"
-}
-case class Justif[T](prove: List[T] => Option[T], children: List[RoseTree[T]]) extends RoseTree[T] {
-    override def toString(): String = s"Justif(..., ${children})"
-}
+case class Hole[T](i: Int) extends RoseTree[T] { override def toString(): String = s"[  ${i}  ]"}
+case class Justif[T](prove: List[T] => Option[T], children: List[RoseTree[T]]) extends RoseTree[T] { override def toString(): String = s"Justif(..., ${children})" }
 
 object RoseTree:
 
     def walk[T](rt: RoseTree[T], pad: String = ""): Option[T] =
-        // println(rt)
         rt match
-            case Hole(_) => { /*println(s"${pad}rosetree NONE");*/
-                None
-            }
+            case Hole(_) =>                 None
             case Justif(proves, children) =>
-                // println(s"${pad}rosetree Justif, found ${children.size} children")
                 val pad2 = s"   ${pad}"
                 for (
                   tmp <- Lib.optionsOut(children.map(walk(_, pad2)));
@@ -25,10 +17,6 @@ object RoseTree:
                 ) yield res
 
     def replace[T](rt: RoseTree[T], i: Int, justif: Justif[T]): RoseTree[T] =
-        // println(s"      replace(rt, ${i}, ...)")
         rt match
-            case Hole(j) =>
-                if i == j then { /*println(s"replace: Found holeID $i"); */
-                    justif
-                } else rt
+            case Hole(j) =>                if i == j then justif else rt
             case Justif(prove, children) => Justif(prove, children.map(replace(_, i, justif)))
