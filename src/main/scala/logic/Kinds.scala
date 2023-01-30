@@ -4,7 +4,7 @@ sealed trait Kind
 case object TyKind                  extends Kind
 case class ConstructorKind(k: Kind) extends Kind
 
-given CanEqual[Kind, Kind] = CanEqual.derived // TODO: check this defines the right equality
+given CanEqual[Kind, Kind] = CanEqual.derived 
 
 object TyFunctionKind:
     def apply(): Kind = ConstructorKind(TyKind)
