@@ -77,7 +77,7 @@ object ProofState:
                 proofState.selected match
                     case List() => None
                     case holeID :: rest =>
-                        assert(rest.size < 1) // TODO this is not true in general, but true for all tactics implemented.
+                        assert(rest.size < 1) // NOTE: this is not true in general, but true for all tactics currently implemented.
                         val selectedGoalContext = proofState.subgoals(holeID)
                         PreTactic.apply(preTac)(selectedGoalContext.goal) match
                             case None           => None
