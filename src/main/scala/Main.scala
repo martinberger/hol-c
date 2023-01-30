@@ -1,4 +1,4 @@
-object Tests:
+object Main:
 
     def eval(runner: () => (Int, Int), name: String): Int =
         println(s"\n----------- ${name} Tests -----------")
