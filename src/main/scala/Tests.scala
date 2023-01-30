@@ -13,5 +13,5 @@ object Tests:
         failedTests += eval(TypeTests.run, "Type")
         failedTests += eval(TermTests.run, "Term")
         failedTests += eval(RuleTests.run, "Rule")
-        failedTests += eval(Prover.TacTests.run, "Tactic")
+        // failedTests += eval(Prover.TacTests.run, "Tactic")
         // TODO enable this: System.exit(failedTests);

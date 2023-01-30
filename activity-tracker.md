@@ -1,5 +1,6 @@
 ## 30.1.2023
-- TODO Handle failing tests.
+- DONE Handle failing term tests.
+- TODO Handle failing tactic tests.
 - TODO Make code more presentable
 - TODO Clean up debugging artefacts even more
 ## 29.1.2023
