@@ -13,9 +13,9 @@ TODO:
 - [X] Implement Peirce's law
 - [X] Make code presentable 
 - [X] Sync paper and code
+- [ ] Sync taint ordering with paper (remove unused taint?)
 - [ ] Make short documentation on how to use code
-- [ ] Prepare code / repo for publication
 - [X] Add GitHub actions with some basic CI
 - [ ] Add licence & copyright to code (if needed)
-- [ ] Prepare repo for going public
+- [X] Prepare repo for going public
 - [ ] Make repo public

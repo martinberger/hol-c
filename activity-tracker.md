@@ -1,9 +1,11 @@
 ## 30.1.2023
-- TODO Look all the TODO comments
-- TODO Remove the log option in tactics
+- DONE implement Try(tac) 
+- DONE implement Repeat(tac)
+- DONE Look many the TODO comments
+- DONE Remove the log option in tactics
 - DONE Handle failing term tests.
 - DONE Handle failing tactic tests.
-- TODO Make code more presentable
+- DONE Make code more presentable
 - DONE Clean up debugging artefacts even more
 ## 29.1.2023
 - DONE Set up basic CI
