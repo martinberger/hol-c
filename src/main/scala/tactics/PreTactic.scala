@@ -50,14 +50,13 @@ object PreTactic:
     type PreGoals = (List[Goal], List[Thm] => Option[Thm])
     // type PreTactic = Goal => Option[PreGoals]
 
-    def apply(pretac: PreTactic, log: Boolean = false): Goal => Option[PreGoals] =
+    def apply(pretac: PreTactic): Goal => Option[PreGoals] =
         pretac match
             case Init_pretac() =>
                 (goal: Goal) =>
                     val (gamma, tm, taint) = goal
                     (valid(gamma), gamma.contains(tm), taint) match
                         case (true, true, I) =>
-                            if log then println("Init_pretac checks worked")
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List() => init(gamma, tm)
