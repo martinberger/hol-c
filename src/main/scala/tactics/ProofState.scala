@@ -100,7 +100,7 @@ object ProofState:
                 act(proofState)(fst) match
                     case None              => act(proofState)(snd)
                     case success @ Some(_) => success
-            case Repeat(tac) => { ??? } // TODO
+            case Repeat(tac) => Lib.fail("ProofState.scala")("Repeat tactic not implemented, because, not useful with current proof system")
             case Select(selectedSubgoals) => // NOTE: invalid names are simply not selected.
                 val selectedHoleID = selectedSubgoals.map(nameToHoleID(proofState)).flatten
                 val newSelection   = selectedSubgoals :: (proofState.selected.filter(i => !selectedSubgoals.contains(i)))

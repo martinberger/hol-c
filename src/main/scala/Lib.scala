@@ -2,6 +2,9 @@ package Prover
 
 object Lib:
 
+    def fail[T](loc: String)(msg: String): T =
+        throw new Exception(s"[${loc}] ${msg}")
+
     private var global = -1
 
     def gensym(): Int = { global += 1; global }
