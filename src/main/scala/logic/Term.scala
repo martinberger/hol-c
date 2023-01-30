@@ -61,28 +61,28 @@ object Term:
                     case _            => None
 
 object TrueProp:
-    def apply(): Term = Const("TrueProp", Prop()) // TODO make enum so we don't get crazy strings
+    def apply(): Term = Const("TrueProp", Prop()) 
     def unapply(tm: Term): Boolean =
         tm match
             case Const("TrueProp", Prop()) => true
             case _                         => false
 
 object FalseProp:
-    def apply(): Term = Const("FalseProp", Prop()) // TODO make enum so we don't get crazy strings
+    def apply(): Term = Const("FalseProp", Prop()) 
     def unapply(tm: Term): Boolean =
         tm match
             case Const("FalseProp", Prop()) => true
             case _                          => false
 
 object TrueBool:
-    def apply(): Term = Const("TrueBool", Bool()) // TODO make enum so we don't get crazy strings
+    def apply(): Term = Const("TrueBool", Bool()) 
     def unapply(tm: Term): Boolean =
         tm match
             case Const("TrueBool", Bool()) => true
             case _                         => false
 
 object FalseBool:
-    def apply(): Term = Const("FalseBool", Bool()) // TODO make enum so we don't get crazy strings
+    def apply(): Term = Const("FalseBool", Bool()) 
     def unapply(tm: Term): Boolean =
         tm match
             case Const("FalseBool", Bool()) => true
@@ -127,7 +127,7 @@ object BinaryPredicate:
             case App(App(pred, arg1), arg2) => Some((pred, arg1, arg2))
             case _                          => None
 
-object Binop: // TODO make an enumeration of binops, so we cannot construct weird logical ops like "hello"
+object Binop: 
     def apply(tm1: Term, tm2: Term, name: String): Term =
         BinaryPredicate(Const(name, FunctionTyPropPropProp()), tm1, tm2)
     def unapply(tm: Term): Option[(Term, Term, String)] =
@@ -156,7 +156,7 @@ object Implies:
             case Binop(tm1, tm2, "implies") => Some((tm1, tm2))
             case _                          => None
 
-object Quantifier: // TODO: make enumeration of forall/exists so we cannot construct a qunatifier "howeowier"
+object Quantifier: 
     def apply(x: String, ty: Ty, body: Term, constructorName: String): Term =
         val q_ty = QuantifierTy(ty)
         val lam  = Lam(Var(x, ty), body)
@@ -195,101 +195,3 @@ object Equivalence:
             case Equation(l, r, Prop()) => Some((l, r))
             case _                      => None
 
-object Member:
-    def apply(tv: TyVar): Term = Const("Member", FunctionTyVarSetProp(tv)) // TODO make enum so we don't get crazy strings
-    def unapply(tm: Term): Option[TyVar] =
-        tm match
-            case Const("Member", FunctionTyVarSetProp(tv)) => Some(tv)
-            case _                                         => None
-
-object MemberCheck: // MemberCheck(x, S) is short for ((Member S)x)
-    def apply(tv: TyVar, x: Var, s: Term): Term = BinaryPredicate(Member(tv), x, s)
-    def unapply(tm: Term): Option[(TyVar, Var, Term)] =
-        tm match
-            case BinaryPredicate(Member(tv), x @ Var(_, _), s) => Some(tv, x, s) // TODO don't we have to check more?
-            case _                                             => ???
-
-object EmptySet: // TODO this should be defined in terms of Member
-    def apply(ty: Ty): Term = Const("EmptySet", SetTy(ty)) // TODO make enum so we don't get crazy strings
-    def unapply(tm: Term): Option[Ty] =
-        tm match
-            case Const("EmptySet", SetTy(ty)) => Some(ty)
-            case _                            => None
-
-object UnionSet: // TODO this should be defined in terms of Member
-    def apply(ty: Ty, s1: Term, s2: Term): Term     = ???
-    def unapply(tm: Term): Option[(Ty, Term, Term)] = ???
-
-object Cmpl:
-    def apply(tv: TyVar): Term = Const("Compl", FunctionTy(SetTy(tv), SetTy(tv)))
-    def unapply(tm: Term): Option[TyVar] =
-        tm match
-            case Const("Compl", FunctionTy(SetTy(tv1 @ TyVar(_)), SetTy(tv2 @ TyVar(_)))) if tv1 == tv2 => Some(tv1)
-            case _                                                                                      => None
-
-object CmplementSet: // TODO this should be defined in terms of Member
-    def apply(ty: Ty, s: Term): Term          = ???
-    def unapply(tm: Term): Option[(Ty, Term)] = ???
-
-object ComprehensionSet:
-    def apply(x: Var, tm: Term): Term = Lam(x, tm)
-    def unapply(tm: Term): Option[(Var, Term)] =
-        tm match
-            case Lam(x, tm) => Some((x, tm))
-            case _          => None
-
-object SingletonSet:
-    def apply(ty: Ty, tm: Term): Term =
-        val x = Lib.freshVar(Term.fv(tm), ty)
-        ComprehensionSet(x, Equation(x, tm, ty))
-    def unapply(tm: Term): Option[(Ty, Term)] =
-        tm match
-            case ComprehensionSet(_, Equation(_, tm, ty)) => Some((ty, tm))
-            case _                                        => None
-
-object Lift: // Can/should be defined with ITE?
-    def apply(): Term = Const("lift", FunctionTy(Bool(), Prop()))
-    def unapply(tm: Term): Boolean =
-        tm match
-            case Const("lift", FunctionTy(Bool(), Prop())) => true
-            case _                                         => false
-
-object Finite:
-    def apply(tv: TyVar): Term = Const("Finite", FunctionTy(SetTy(tv), Prop()))
-    def unapply(tm: Term): Option[TyVar] =
-        tm match
-            case Const("Finite", FunctionTy(SetTy(tv @ TyVar(_)), Prop())) => Some(tv)
-            case _                                                         => None
-
-object FunctCompose:
-    def apply(tv1: TyVar, tv2: TyVar, tv3: TyVar): Term =
-        val ty1 = FunctionTy(tv1, tv2)
-        val ty2 = FunctionTy(tv2, tv3)
-        Const("o", TernaryFunctionTy(ty1, ty2, tv1, tv3))
-    def unapply(tm: Term): Option[(TyVar, TyVar, TyVar)] =
-        tm match
-            case Const(
-                  "o",
-                  TernaryFunctionTy(
-                    FunctionTy(tv1a @ TyVar(_), tv2a @ TyVar(_)),
-                    FunctionTy(tv2b @ TyVar(_), tv3b @ TyVar(_)),
-                    tv1c @ TyVar(_),
-                    tv3d @ TyVar(_)
-                  )
-                ) if tv1a == tv1c && tv2a == tv2b && tv3b == tv3d =>
-                Some((tv1a, tv2a, tv3b))
-            case _ => None
-
-object FunctComposer:
-    def apply(tv1: TyVar, tv2: TyVar, tv3: TyVar, f1: Term, f2: Term): Term = App(App(FunctCompose(tv1, tv2, tv3), f1), f2)
-    def unapply(tm: Term): Option[(TyVar, TyVar, TyVar, Term, Term)] =
-        tm match
-            case App(App(FunctCompose(tv1, tv2, tv3), f1), f2) => Some((tv1, tv2, tv3, f1, f2))
-            case _                                             => None
-
-object Identity:
-    def apply(tv: TyVar): Term = Const("id", FunctionTy(tv, tv))
-    def unapply(tm: Term): Option[TyVar] =
-        tm match
-            case Const("id", FunctionTy(tv1 @ TyVar(_), tv2 @ TyVar(_))) if tv1 == tv2 => Some(tv1)
-            case _                                                                     => None
