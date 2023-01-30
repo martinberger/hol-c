@@ -92,7 +92,10 @@ object ProofState:
             // Note: passing on error message.
             // requires replacing Option[ProofState] with something
             // more sophisticated like Either[String, ProofState]
-            case Try(tac) => ??? // TODO
+            case Try(tac) =>
+                act(proofState)(tac) match
+                    case res @ Some(_) => res
+                    case None          => Some(proofState)
             case OrElse(fst, snd) =>
                 act(proofState)(fst) match
                     case None              => act(proofState)(snd)
