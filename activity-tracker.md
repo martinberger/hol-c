@@ -1,8 +1,10 @@
 ## 30.1.2023
+- TODO Look all the TODO comments
+- TODO Remove the log option in tactics
 - DONE Handle failing term tests.
-- TODO Handle failing tactic tests.
+- DONE Handle failing tactic tests.
 - TODO Make code more presentable
-- TODO Clean up debugging artefacts even more
+- DONE Clean up debugging artefacts even more
 ## 29.1.2023
 - DONE Set up basic CI
 - DONE Finish Peirce
