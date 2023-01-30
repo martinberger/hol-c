@@ -114,5 +114,4 @@ object ProofState:
 
     def qed(ps: ProofState): Option[Thm] =
         if ps.subgoals.size > 0 then return None
-        val res = RoseTree.walk(ps.justificationTree)
-        res
+        RoseTree.walk(ps.justificationTree)
