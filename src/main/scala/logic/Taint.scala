@@ -1,44 +1,38 @@
 package Prover
 
 sealed trait Taint
-case object I   extends Taint
-case object E   extends Taint
-case object C   extends Taint
-case object CE  extends Taint
-case object CC  extends Taint
-case object CCE extends Taint
-case object W   extends Taint // TODO: Add ordering relations. CURRENTLY WRONG
-case object CH  extends Taint // TODO: Add ordering relations. CURRENTLY WRONG
+case object I  extends Taint
+case object W  extends Taint
+case object C  extends Taint
+case object CH extends Taint
+// case object E   extends Taint // Not used in current version of paper
+// case object CE  extends Taint // Not used in current version of paper
+// case object CC  extends Taint // Not used in current version of paper
+// case object CCE extends Taint // Not used in current version of paper
 
 given CanEqual[Taint, Taint] = CanEqual.derived
 
 // Taint semilattice has this order:
 //
-//        CCE
-//        /\
-//      CE  CC
-//     / \ /
-//    E   C
-//     \ /
-//      I
+//   CH
+//    |
+//    C
+//    |
+//    W
+//    |
+//    I
 
 object TaintLattice extends JoinSemilattice:
     type T = Taint
 
     val bot = I
-    val top = CCE
+    val top = CH
 
     def eq(t1: T, t2: T): Boolean = t1 == t2
     def lub(t1: T, t2: T): T =
         (t1, t2) match
             case (t1, t2) if t1 == t2 => t1
             case (I, t)               => t
-            case (t, I)               => t
-            case (E, C) | (C, E)      => CE
-            case (E, CC) | (CC, E)    => CCE
-            case (E, t)               => t
-            case (t, E)               => t
+            case (W, t)               => t
             case (C, t)               => t
-            case (t, C)               => t
-            case (CE, CC) | (CC, CE)  => CCE
-            case _                    => CCE
+            case (CH, t)              => t
