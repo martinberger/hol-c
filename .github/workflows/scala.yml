@@ -21,11 +21,11 @@ jobs:
           - os: windows-latest     
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 11
+    - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
-        java-version: '11' # I should move to something newer!
-        distribution: 'temurin'
+        java-version: '17' # I should move to something newer!
+        distribution: 'zulu'
         cache: 'sbt'
     - name: Run tests
       run: sbt test
