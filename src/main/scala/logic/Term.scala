@@ -160,8 +160,7 @@ object Quantifier: // TODO: make enumeration of forall/exists so we cannot const
     def apply(x: String, ty: Ty, body: Term, constructorName: String): Term =
         val q_ty = QuantifierTy(ty)
         val lam  = Lam(Var(x, ty), body)
-        val tm   = App(Const(constructorName, q_ty), lam)
-        tm // TODO remove all those temporary variables
+        App(Const(constructorName, q_ty), lam)
     def unapply(tm: Term): Option[(String, Ty, Term, String)] =
         tm match
             case App(Const(constructorName, QuantifierTy(ty)), Lam(Var(x, ty1), body)) if ty == ty1 =>
