@@ -1,8 +1,10 @@
 ## 30.1.2023
-- TODO make `Goal` opaque?
-- TODO make `HoleID` opaque?
-- TODO make `Thm` itself opaque!
-- TODO fix taint ordering relations
+- DONE Can I import `ThmClass` only as/via `ProofSystem`?
+- DONE make `Goal` opaque?
+- DONE make `HoleID` opaque?
+- DONE make `Thm` itself opaque!
+- DONE Write short explanation of how to compile and run
+- DONE fix taint ordering relations
 - DONE removed old set-theory definitions
 - DONE implement Try(tac) 
 - DONE implement Repeat(tac)
