@@ -1,7 +1,8 @@
 package Prover
 
 import Context._
-import ThmClass._
+//import ThmClass._
+import Thm._
 import ProofState.{Goal}
 
 sealed trait PreTactic
@@ -216,7 +217,7 @@ object PreTactic:
                             val subgoal = (gamma, phi, taint)
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
-                                    case List(thm) => ThmClass.subst(thm, r, x.ty, x)
+                                    case List(thm) => Thm.subst(thm, r, x.ty, x)
                                     case _         => None
                             Some(List(), justification)
                         case _ => None

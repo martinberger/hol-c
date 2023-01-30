@@ -1,6 +1,7 @@
 package Prover
 
-import ThmClass._
+import Thm._
+//import ThmClass._
 import Context._
 import ProofState.{HoleID, Goal}
 
@@ -13,7 +14,7 @@ case class GoalContext(
 
 class ProofState(
     val subgoals: Map[HoleID, GoalContext],
-    val justificationTree: RoseTree[Goal],
+    val justificationTree: RoseTree[Goal, Thm],
     val selected: List[HoleID]
 ) {
     override def toString(): String = s"""
@@ -51,7 +52,7 @@ object ProofState:
     def mkFreshNamed(goal: Goal, name: String): ProofState =
         Lib.reset() // Needed because we don't have a fully functional architecture.
         val holeID            = Lib.gensym()
-        val justificationTree = Hole[Thm](holeID)
+        val justificationTree = Hole[Goal, Thm](holeID)
         ProofState(Map(holeID -> GoalContext(goal, name)), justificationTree, List())
 
     def mkFresh(goal: Goal): ProofState =
@@ -59,9 +60,9 @@ object ProofState:
 
     def insert(ps: ProofState)(holeID: HoleID, preGoals: PreTactic.PreGoals): ProofState =
         val (newSubgoals, justif) = preGoals
-        val newHoles              = newSubgoals.map(goal => { val hid = Lib.gensym(); (hid, goal, new Hole[Thm](hid)) })
+        val newHoles              = newSubgoals.map(goal => { val hid = Lib.gensym(); (hid, goal, new Hole[Goal, Thm](hid)) })
         val newChildren           = newHoles.map(_._3)
-        val newJustificationTree  = RoseTree.replace(ps.justificationTree, holeID, Justif[Thm](justif, newChildren))
+        val newJustificationTree  = RoseTree.replace(ps.justificationTree, holeID, Justif[Goal, Thm](justif, newChildren))
         val remainingSubgoals     = ps.subgoals.filter(_._1 != holeID)
         val allNewSubgoals        = remainingSubgoals ++ newHoles.map(t => (t._1, GoalContext(t._2, s"goal_${t._1}"))).toMap
         ProofState(allNewSubgoals, newJustificationTree, List())

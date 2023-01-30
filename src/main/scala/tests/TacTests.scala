@@ -1,6 +1,7 @@
 package Prover
 
-import ThmClass._
+import Thm._
+//import ThmClass._
 import Context._
 import ProofState.{qed, mkFreshNamed, act}
 import Tactic.{AndThenList, makeGeneric}
