@@ -29,7 +29,6 @@ class TestCase(
     def id: Handler        = { (_, _) => () }
     def printFail: Handler = { (_, res) => if res == None then println(s"FAIL ${this}") }
     def runGenericNoQED(resultHandler: Handler = printFail): Option[ProofState] =
-        println(s"------------- runGenericNoQED ${name} -------------")
         Lib.reset() // Unfortunately, needed at this point. TODO: remove
         val goal    = (ctx, goalTm, taint)
         val initial = "my_goal"
@@ -42,9 +41,7 @@ class TestCase(
     def idQED: QEDHandler        = { (_, _) => true }
     def printFailQED: QEDHandler = { (_, res) => res != None }
     def runGeneric(resultHandler: QEDHandler = printFailQED): Boolean =
-        // println(s"------------- runGeneric ${name} -------------")
-        Lib.reset() // Unfortunately, needed at this point. TODO: remove
-        // println(tactic) // TODO remove
+        Lib.reset() // Unfortunately, needed at this point. TODO: remove, maybe move to mkFreshNamed?
         val goal    = (ctx, goalTm, taint)
         val initial = "my_goal"
         val ps      = mkFreshNamed(goal, initial)
@@ -54,9 +51,6 @@ class TestCase(
           res2 <- qed(res1)
         ) yield res2
         resultHandler(this, res)
-        // res match
-        //     case Some(thm) => println(s"Just got theorem: ${thm}")
-        //     case _         => println("Did not woooork")
 
 object TacTests:
 
@@ -69,16 +63,6 @@ object TacTests:
     val context3: Context = List(eq_x_y, eq_y_z, eq_m_m)
     val t1                = TestCase("test1", context0, eq_x_x, I, Id())
     val t2                = TestCase("test2", context0, eq_x_x, I, printState)
-
-    // val simpleTacs = List(
-    //   Id(),
-    //   PrintState(),
-    //   AndThen(Id(), Id()),
-    //   AndThenList(List(Id(), Id(), Id())),
-    //   AndThenList(List(printState, Id(), Id(), Id(), printState)),
-    //   AndThenList(List(AndThenList(List(printState, Id(), Id(), Id(), printState))))
-    // )
-    // val simpleTacs2: List[Tactic] = Lib.sandwich(Id())(simpleTacs)
 
     def select(i: Int): Tactic = Select(List(s"goal_${i.toString}"))
 
