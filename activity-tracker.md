@@ -1,4 +1,10 @@
 ## 30.1.2023
+- TODO make `Goal` opaque?
+- TODO make `HoleID` opaque?
+- TODO make `Thm` itself opaque!
+- TODO fix taint ordering relations
+
+- DONE removed old set-theory definitions
 - DONE implement Try(tac) 
 - DONE implement Repeat(tac)
 - DONE Look many the TODO comments
