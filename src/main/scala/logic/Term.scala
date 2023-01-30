@@ -3,10 +3,10 @@ package Prover
 import java.security.Identity
 
 sealed trait Term
-case class Var(name: String, ty: Ty) extends Term { override def toString: String = s"${name}" } // ^${ty.toString}" }
-case class Const(c: String, ty: Ty) extends Term { override def toString: String = s"${c}"         }
-case class App(l: Term, r: Term)    extends Term { override def toString: String = s"(${l}, ${r})" }
-case class Lam(x: Var, body: Term)  extends Term
+case class Var(name: String, ty: Ty) extends Term { override def toString: String = s"${name}"      } // ^${ty.toString}" }
+case class Const(c: String, ty: Ty)  extends Term { override def toString: String = s"${c}"         }
+case class App(l: Term, r: Term)     extends Term { override def toString: String = s"(${l}, ${r})" }
+case class Lam(x: Var, body: Term)   extends Term
 
 given CanEqual[Term, Term] = CanEqual.derived
 

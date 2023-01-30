@@ -10,4 +10,4 @@ object KindTests:
     val tyfunkind_apply = TyFunctionKind()
     val binarytyfunkind = BinaryTyFunctionKind()
 
-    def run(): (Int, Int) = { (0, 0) }
+    def run(): (Int, Int) = (0, 0)

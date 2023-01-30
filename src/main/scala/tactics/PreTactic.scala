@@ -61,9 +61,9 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List() => init(gamma, tm)
-                                    case _      => None 
+                                    case _      => None
                             Some(List(), justification)
-                        case _ => None 
+                        case _ => None
 
             case TrueI_pretac() =>
                 (goal: Goal) =>
@@ -73,7 +73,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List() => trueI(gamma)
-                                    case _ => None 
+                                    case _      => None
                             Some(List(), justification)
                         case _ => None
 
@@ -86,7 +86,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => falseE(thm, tm)
-                                    case _ => None 
+                                    case _         => None
                             Some(List(subgoal), justification)
                         case _ => None
 
@@ -99,7 +99,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => lift(thm, bigTaint)
-                                    case _ => None
+                                    case _         => None
                             Some(List(subgoal), justification)
                         case _ => None
 
@@ -110,7 +110,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List() => refl(gamma, l, ty)
-                                    case _ => None
+                                    case _      => None
                             Some(List(), justification)
                         case _ => None
 
@@ -122,7 +122,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => sym(thm)
-                                    case _ => None 
+                                    case _         => None
                             Some(List(subgoal), justification)
                         case _ => None
 
@@ -135,7 +135,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm1, thm2) => trans(thm1, thm2)
-                                    case _ => None
+                                    case _                => None
                             Some(List(subgoal1, subgoal2), justification)
                         case _ => None
 
@@ -150,7 +150,7 @@ object PreTactic:
                                     def justification(ts: List[Thm]): Option[Thm] =
                                         ts match
                                             case List(thm) => lcong(thm, x1)
-                                            case _ => None
+                                            case _         => None
                                     Some(List(subgoal), justification)
                                 case _ => None
                         case _ => None
@@ -167,7 +167,7 @@ object PreTactic:
                                     def justification(ts: List[Thm]): Option[Thm] =
                                         ts match
                                             case List(thm1, thm2) => acong(thm1, thm2)
-                                            case _ => None 
+                                            case _                => None
                                     Some(List(subgoalL, subgoalR), justification)
                                 case _ => None
                         case _ => None
@@ -180,7 +180,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 (ts, Term.tyInference(lam)) match
                                     case (List(), Some(ty_src)) => beta(gamma, lam, ty_src, ty_target, r)
-                                    case _ => None 
+                                    case _                      => None
                             Some(List(), justification)
                         case _ => None
 
@@ -192,7 +192,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List() => eta(gamma, tm, ty)
-                                    case _ => None 
+                                    case _      => None
                             Some(List(), justification)
                         case _ => None
 
@@ -205,7 +205,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => tysubst(thm, ty, tv)
-                                    case _ => None 
+                                    case _         => None
                             Some(List(), justification)
                         case _ => None
 
@@ -218,7 +218,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => ThmClass.subst(thm, r, x.ty, x)
-                                    case _ => None
+                                    case _         => None
                             Some(List(), justification)
                         case _ => None
 
@@ -230,7 +230,7 @@ object PreTactic:
                     def justification(ts: List[Thm]): Option[Thm] =
                         ts match
                             case List(thm1, thm2) => iffE1(thm1, thm2)
-                            case _ => None
+                            case _                => None
                     Some(List(subgoal1, subgoal2), justification)
 
             case IffE2_pretac(tmR: Term) =>
@@ -241,7 +241,7 @@ object PreTactic:
                     def justification(ts: List[Thm]): Option[Thm] =
                         ts match
                             case List(thm1, thm2) => iffE2(thm1, thm2)
-                            case _ => None
+                            case _                => None
                     Some(List(subgoal1, subgoal2), justification)
 
             case IffI_pretac() =>
@@ -254,7 +254,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm1, thm2) => iffI(thm1, thm2)
-                                    case _ => None 
+                                    case _                => None
                             Some(List(subgoalL, subgoalR), justification)
                         case _ => None
 
@@ -268,7 +268,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm1, thm2) => conjI(thm1, thm2)
-                                    case _ => None
+                                    case _                => None
                             Some(List(subgoal1, subgoal2), justification)
                         case _ => None
 
@@ -279,7 +279,7 @@ object PreTactic:
                     def justification(ts: List[Thm]): Option[Thm] =
                         ts match
                             case List(thm) => conjE1(thm)
-                            case _ => None
+                            case _         => None
                     Some(List(subgoal), justification)
 
             case ConjE2_pretac(l: Term) =>
@@ -289,7 +289,7 @@ object PreTactic:
                     def justification(ts: List[Thm]): Option[Thm] =
                         ts match
                             case List(thm) => conjE2(thm)
-                            case _ => None
+                            case _         => None
                     Some(List(subgoal), justification)
 
             case DisjI1_pretac() =>
@@ -301,7 +301,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => disjI1(thm, r)
-                                    case _ => None
+                                    case _         => None
                             Some(List(subgoal), justification)
                         case _ => None
 
@@ -314,7 +314,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => disjI2(thm, l)
-                                    case _ => None 
+                                    case _         => None
                             Some(List(subgoal), justification)
                         case _ => None
 
@@ -327,22 +327,21 @@ object PreTactic:
                     def justification(ts: List[Thm]): Option[Thm] =
                         ts match
                             case List(thm, thm1, thm2) => disjE(thm, thm1, thm2)
-                            case _ => None
+                            case _                     => None
                     Some(List(subgoal), justification)
 
             case ImpI_pretac() =>
                 (goal) =>
                     val (gamma, tm, taint) = goal
-                        tm match
-                            case Implies(l, r) =>
-                                val subgoal = (l :: gamma, r, taint)
-                                def justification(ts: List[Thm]): Option[Thm] =
-                                    ts match
-                                        case List(thm) => impI(thm, l)
-                                        case _ => None
-                                Some(List(subgoal), justification)
-                            case _ => None
-
+                    tm match
+                        case Implies(l, r) =>
+                            val subgoal = (l :: gamma, r, taint)
+                            def justification(ts: List[Thm]): Option[Thm] =
+                                ts match
+                                    case List(thm) => impI(thm, l)
+                                    case _         => None
+                            Some(List(subgoal), justification)
+                        case _ => None
 
             case ImpE_pretac(tm1: Term) =>
                 (goal) =>
@@ -352,7 +351,7 @@ object PreTactic:
                     def justification(ts: List[Thm]): Option[Thm] =
                         ts match
                             case List(thm1, thm2) => impE(thm1, thm2)
-                            case _ => None 
+                            case _                => None
                     Some(List(subgoal1, subgoal2), justification)
 
             case NegI_pretac() =>
@@ -364,7 +363,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => negI(thm, tm1)
-                                    case _ => None
+                                    case _         => None
                             Some(List(subgoal), justification)
                         case _ => None
 
@@ -377,7 +376,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm1, thm2) => negE(thm1, thm2)
-                                    case _ => None
+                                    case _                => None
                             Some(List(subgoal1, subgoal2), justification)
                         case _ => None
 
@@ -390,7 +389,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => allI(thm, Var(x, ty))
-                                    case _ => None
+                                    case _         => None
                             Some(List(subgoal), justification)
                         case _ => None
 
@@ -403,7 +402,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => allE(thm, r)
-                                    case _ => None 
+                                    case _         => None
                             Some(List(subgoal), justification)
                         case _ => None
 
@@ -416,7 +415,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm) => exI(thm, phi, x, r)
-                                    case _ => None 
+                                    case _         => None
                             Some(List(subgoal), justification)
                         case _ => None
 
@@ -429,7 +428,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List(thm1, thm2) => exE(thm1, thm2, x.name)
-                                    case _ => None 
+                                    case _                => None
                             Some(List(subgoal1, subgoal2), justification)
                         case _ => None
 
@@ -440,7 +439,7 @@ object PreTactic:
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
                                     case List() => lem(gamma, tm1)
-                                    case _ => None
+                                    case _      => None
                             Some(List(), justification)
                         case _ => None
 
@@ -451,9 +450,9 @@ object PreTactic:
                             val subgoal = (Neg(tm) :: gamma, FalseProp(), taint)
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
-                                    case List(thm) => raa(thm, tm) 
-                                    case _ => None 
-                            Some(List(subgoal), justification) 
+                                    case List(thm) => raa(thm, tm)
+                                    case _         => None
+                            Some(List(subgoal), justification)
                         case _ => None
 
             case Weaken_pretac(tm1: Term) =>
@@ -463,6 +462,5 @@ object PreTactic:
                     def justification(ts: List[Thm]): Option[Thm] =
                         ts match
                             case List(thm) => weaken(thm, tm1)
-                            case _ => None
+                            case _         => None
                     Some(List(subgoal), justification)
-

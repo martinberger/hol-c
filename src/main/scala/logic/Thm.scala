@@ -13,8 +13,7 @@ object ThmClass extends ProofSystem:
 
     def init(gamma: Context, phi: Term): Option[Thm] =
         if valid(gamma) && gamma.contains(phi) && Term.check(phi, Prop()) then Some((gamma, phi, I))
-        else 
-            None
+        else None
 
     def refl(gamma: Context, tm: Term, ty: Ty): Option[Thm] =
         if valid(gamma) && Term.check(tm, ty) then
@@ -59,7 +58,7 @@ object ThmClass extends ProofSystem:
 
     def lift(thm: Thm, bigTaint: Taint): Option[Thm] =
         val (gamma, tm, smallTaint) = thm
-        if !leq(smallTaint, bigTaint) then return  None 
+        if !leq(smallTaint, bigTaint) then return None
         Some((gamma, tm, bigTaint))
 
     def beta(gamma: Context, lam: Lam, src: Ty, target: Ty, tm: Term): Option[Thm] =
@@ -102,7 +101,7 @@ object ThmClass extends ProofSystem:
         if !gamma1.contains(tm2) || !gamma2.contains(tm1) || taint1 != taint2 then return None
         val gamma3 = remove(gamma1, tm2)
         val gamma4 = remove(gamma2, tm1)
-        if gamma3 != gamma4 then return None 
+        if gamma3 != gamma4 then return None
         Some((gamma3, Equivalence(tm1, tm2), taint1))
 
     def trueI(gamma: Context): Option[Thm] =
@@ -158,23 +157,23 @@ object ThmClass extends ProofSystem:
         if !gamma.contains(tm1) then return None
         Some((remove(gamma, tm1), Implies(tm1, tm2), taint))
 
-    def impE(thm1: Thm, thm2: Thm): Option[Thm] = 
+    def impE(thm1: Thm, thm2: Thm): Option[Thm] =
         val (gamma2, tm2, taint2) = thm2
         thm1 match
             case (gamma1, Implies(l, r), taint1) if l == tm2 && taint1 == taint2 && gamma1 == gamma2 => Some((gamma1, r, taint1))
-            case _ => None
+            case _                                                                                   => None
 
     def negI(thm: Thm, phi: Term): Option[Thm] =
         val (gamma, tm, taint) = thm
-        if tm != FalseProp() || !gamma.contains(phi) then            return None
+        if tm != FalseProp() || !gamma.contains(phi) then return None
         Some((remove(gamma, phi), Neg(phi), taint))
 
-    def negE(thm1: Thm, thm2: Thm): Option[Thm] = 
+    def negE(thm1: Thm, thm2: Thm): Option[Thm] =
         val (gamma1, tm1, taint1) = thm1
         thm2 match
             case (gamma2, Neg(tm2), taint2) if tm1 == tm2 && gamma1 == gamma2 && taint1 == taint2 =>
                 Some((gamma1, FalseProp(), taint1))
-            case _ =>                 None
+            case _ => None
 
     def allE(thm: Thm, tm: Term): Option[Thm] =
         val (gamma, phi, taint) = thm
@@ -222,10 +221,10 @@ object ThmClass extends ProofSystem:
         if !valid(gamma) || !Term.check(tm, Prop()) then return None
         Some((gamma, Or(tm, Neg(tm)), C))
 
-    def raa(thm: Thm, tm: Term): Option[Thm] = 
+    def raa(thm: Thm, tm: Term): Option[Thm] =
         thm match
-            case (gamma, FalseProp(), _) if gamma.contains(Neg(tm)) =>                Some((remove(gamma, Neg(tm)), tm, C))
-            case _ => None 
+            case (gamma, FalseProp(), _) if gamma.contains(Neg(tm)) => Some((remove(gamma, Neg(tm)), tm, C))
+            case _                                                  => None
 
     def weaken(thm: Thm, tm2: Term): Option[Thm] =
         val (gamma1, tm1, taint) = thm

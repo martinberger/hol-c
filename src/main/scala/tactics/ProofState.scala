@@ -14,10 +14,8 @@ case class GoalContext(
 }
 
 class ProofState(
-    // val subgoals: Queue[GoalContext], // A better data type would be QueueMap
     val subgoals: Map[HoleID, GoalContext],
     val justificationTree: RoseTree[Goal],
-    // val selected: Set[HoleID],
     val selected: List[HoleID]
 ) {
     override def toString(): String = s"""
@@ -68,9 +66,6 @@ object ProofState:
         val newJustificationTree = RoseTree.replace(ps.justificationTree, holeID, Justif[Thm](justif, newChildren))
         val remainingSubgoals    = ps.subgoals.filter(_._1 != holeID)
         val allNewSubgoals       = remainingSubgoals ++ newHoles.map(t => (t._1, GoalContext(t._2, s"goal_${t._1}"))).toMap
-        // val remainingGoalStack    = ps.selected.filter(_ != holeID)
-        // val newGoalStack          = newHoles.map(_._1) ++ remainingGoalStack
-        // ProofState(allNewSubgoals, newJustificationTree, newGoalStack) // TODO should everything be unselected?
         ProofState(allNewSubgoals, newJustificationTree, List())
 
     def getSelectedSubgoals(ps: ProofState): Map[HoleID, GoalContext] =
@@ -127,4 +122,3 @@ object ProofState:
         if ps.subgoals.size > 0 then return None // is this correct?
         val res = RoseTree.walk(ps.justificationTree)
         res
-
