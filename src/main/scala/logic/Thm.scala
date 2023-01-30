@@ -144,11 +144,14 @@ object ThmClass extends ProofSystem:
         val (gamma2, tm2, taint2) = thm2
         val (gamma3, tm3, taint3) = thm3
         thm1 match
-            case (gamma1, Or(l, r), taint1) =>
-                if taint1 != taint2 || taint2 != taint3 ||
-                    !gamma2.contains(l) || !gamma3.contains(r) || tm2 != tm3 ||
-                    gamma1 != remove(gamma2, l) || gamma1 != remove(gamma3, r)
-                then return None
+            case (gamma1, Or(l, r), taint1)
+                if taint1 == taint2
+                    && taint2 == taint3
+                    && gamma2.contains(l)
+                    && gamma3.contains(r)
+                    && tm2 == tm3
+                    && gamma1 == remove(gamma2, l)
+                    && gamma1 == remove(gamma3, r) =>
                 Some((gamma1, tm2, taint1))
             case _ => None
 
