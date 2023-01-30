@@ -1,2 +1,0 @@
-open  -a Terminal .
-emacs -nw src/main/scala/*.scala 
