@@ -29,7 +29,7 @@ class TestCase(
     def id: Handler        = { (_, _) => () }
     def printFail: Handler = { (_, res) => if res == None then println(s"FAIL ${this}") }
     def runGenericNoQED(resultHandler: Handler = printFail): Option[ProofState] =
-        Lib.reset() // Unfortunately, needed at this point. TODO: remove
+        // Lib.reset() // Unfortunately, needed at this point. TODO: remove
         val goal    = (ctx, goalTm, taint)
         val initial = "my_goal"
         val ps      = mkFreshNamed(goal, initial)
@@ -41,7 +41,7 @@ class TestCase(
     def idQED: QEDHandler        = { (_, _) => true }
     def printFailQED: QEDHandler = { (_, res) => res != None }
     def runGeneric(resultHandler: QEDHandler = printFailQED): Boolean =
-        Lib.reset() // Unfortunately, needed at this point. TODO: remove, maybe move to mkFreshNamed?
+        // Lib.reset() // Unfortunately, needed at this point. TODO: remove, maybe move to mkFreshNamed?
         val goal    = (ctx, goalTm, taint)
         val initial = "my_goal"
         val ps      = mkFreshNamed(goal, initial)

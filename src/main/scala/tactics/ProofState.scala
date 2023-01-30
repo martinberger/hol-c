@@ -51,6 +51,7 @@ object ProofState:
     def selectedGoalNames(ps: ProofState): List[String] = ps.selected.map(holeIDtoName(ps))
 
     def mkFreshNamed(goal: Goal, name: String): ProofState =
+        Lib.reset() // Needed because we don't have a fully functional architecture.
         val holeID            = Lib.gensym()
         val justificationTree = Hole[Thm](holeID)
         ProofState(Map(holeID -> GoalContext(goal, name)), justificationTree, List())
@@ -71,8 +72,7 @@ object ProofState:
     def getSelectedSubgoals(ps: ProofState): Map[HoleID, GoalContext] =
         ps.subgoals.filter(gc => ps.selected.contains(gc._1))
 
-    def act(proofState: ProofState)(tac: Tactic, log: Boolean = false): Option[ProofState] =
-        if log then { println(s"entering act(...) with tactic ${tac}"); println(proofState) }
+    def act(proofState: ProofState)(tac: Tactic): Option[ProofState] =
         tac match
             case Apply(preTac) =>
                 proofState.selected match
@@ -80,13 +80,13 @@ object ProofState:
                     case holeID :: rest =>
                         assert(rest.size < 1) // TODO this is not true in general, but true for all tactics implemented.
                         val selectedGoalContext = proofState.subgoals(holeID)
-                        PreTactic.apply(preTac, log)(selectedGoalContext.goal) match
+                        PreTactic.apply(preTac)(selectedGoalContext.goal) match
                             case None           => None
                             case Some(preGoals) => Some(insert(proofState)(holeID, preGoals))
             case AndThen(fst, snd) =>
                 for (
-                  tmp <- act(proofState)(fst, log);
-                  res <- act(tmp)(snd, log)
+                  tmp <- act(proofState)(fst);
+                  res <- act(tmp)(snd)
                 ) yield res
             case Id() => Some(proofState)
             case FailWith(msg) => println(msg); None
@@ -100,14 +100,9 @@ object ProofState:
                     case success @ Some(_) => success
             case Repeat(tac) => { ??? } // TODO
             case Select(selectedSubgoals) => // NOTE: invalid names are simply not selected.
-                if log then
-                    println(s"   ------ Select START ------")
-                    println(s"      Requested subgoals: ${selectedSubgoals}")
                 val selectedHoleID = selectedSubgoals.map(nameToHoleID(proofState)).flatten
                 val newSelection   = selectedSubgoals :: (proofState.selected.filter(i => !selectedSubgoals.contains(i)))
-                if log then println(s"      Requested subgoals as holeID: ${selectedHoleID}")
-                val res = Some(ProofState(proofState.subgoals, proofState.justificationTree, selectedHoleID))
-                if log then { println(res); println(s"   ------ Select STOP ------") }
+                val res            = Some(ProofState(proofState.subgoals, proofState.justificationTree, selectedHoleID))
                 res // TODO remove debuggung junk
             case SelectLast() => // TODO Experimental, if it works can be unified with Select(l) above
                 val hids = proofState.subgoals.keySet
