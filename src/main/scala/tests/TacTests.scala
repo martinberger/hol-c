@@ -29,7 +29,6 @@ class TestCase(
     def id: Handler        = { (_, _) => () }
     def printFail: Handler = { (_, res) => if res == None then println(s"FAIL ${this}") }
     def runGenericNoQED(resultHandler: Handler = printFail): Option[ProofState] =
-        // Lib.reset() // Unfortunately, needed at this point. TODO: remove
         val goal    = (ctx, goalTm, taint)
         val initial = "my_goal"
         val ps      = mkFreshNamed(goal, initial)
@@ -41,7 +40,6 @@ class TestCase(
     def idQED: QEDHandler        = { (_, _) => true }
     def printFailQED: QEDHandler = { (_, res) => res != None }
     def runGeneric(resultHandler: QEDHandler = printFailQED): Boolean =
-        // Lib.reset() // Unfortunately, needed at this point. TODO: remove, maybe move to mkFreshNamed?
         val goal    = (ctx, goalTm, taint)
         val initial = "my_goal"
         val ps      = mkFreshNamed(goal, initial)
@@ -264,13 +262,8 @@ object TacTests:
       Lift_pretac(I),
       Init_pretac()
     )
-    //    ++ ex_falso_quodlibet(a)
-    // ++ List(Init_pretac(), Init_pretac())
 
     val t_peirce = TestCase("Peirce Law (1)", context0, peirce_law, C, makeGeneric(tac_peirce, false))
-// val t_peirceQuantified = TestCase("Peirce Law (2)", context0, all_quantified_peirce_law, C, List()) // TODO
-
-// val testsNoQED = List(t1, t2) ++ ts
 
     val testsWithQED = List(
       ("t3", t3),

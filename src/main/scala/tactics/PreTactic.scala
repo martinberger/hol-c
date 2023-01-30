@@ -183,7 +183,7 @@ object PreTactic:
                             Some(List(), justification)
                         case _ => None
 
-            case Eta_pretac() => // TODO: check that I'm not forgetting a condition
+            case Eta_pretac() =>
                 (goal) =>
                     goal match
                         case (gamma, Equation(tm @ Lam(x1, App(f1, x2)), f2, ty @ FunctionTy(ty1, ty2)), I)

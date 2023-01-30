@@ -63,10 +63,9 @@ object ProofState:
         val (newSubgoals, justif) = preGoals
         val newHoles              = newSubgoals.map(goal => { val hid = Lib.gensym(); (hid, goal, new Hole[Thm](hid)) })
         val newChildren           = newHoles.map(_._3)
-        assert(newSubgoals.size == newChildren.size) // TODO remove later, only for debugging
-        val newJustificationTree = RoseTree.replace(ps.justificationTree, holeID, Justif[Thm](justif, newChildren))
-        val remainingSubgoals    = ps.subgoals.filter(_._1 != holeID)
-        val allNewSubgoals       = remainingSubgoals ++ newHoles.map(t => (t._1, GoalContext(t._2, s"goal_${t._1}"))).toMap
+        val newJustificationTree  = RoseTree.replace(ps.justificationTree, holeID, Justif[Thm](justif, newChildren))
+        val remainingSubgoals     = ps.subgoals.filter(_._1 != holeID)
+        val allNewSubgoals        = remainingSubgoals ++ newHoles.map(t => (t._1, GoalContext(t._2, s"goal_${t._1}"))).toMap
         ProofState(allNewSubgoals, newJustificationTree, List())
 
     def getSelectedSubgoals(ps: ProofState): Map[HoleID, GoalContext] =
@@ -102,18 +101,17 @@ object ProofState:
             case Select(selectedSubgoals) => // NOTE: invalid names are simply not selected.
                 val selectedHoleID = selectedSubgoals.map(nameToHoleID(proofState)).flatten
                 val newSelection   = selectedSubgoals :: (proofState.selected.filter(i => !selectedSubgoals.contains(i)))
-                val res            = Some(ProofState(proofState.subgoals, proofState.justificationTree, selectedHoleID))
-                res // TODO remove debuggung junk
-            case SelectLast() => // TODO Experimental, if it works can be unified with Select(l) above
+                Some(ProofState(proofState.subgoals, proofState.justificationTree, selectedHoleID))
+            case SelectLast() => // NOTE Experimental, if it works can be unified with Select(l) above
                 val hids = proofState.subgoals.keySet
-                if hids.isEmpty then return None // TODO very strict for this experiment. We may also return old proof state
+                if hids.isEmpty then return None // NOTE very strict for this experiment. We may also return old proof state
                 Some(ProofState(proofState.subgoals, proofState.justificationTree, List(hids.max)))
-            // TODO note we assume that goal names are monotonically increasing!
+            // Note we assume that goal names are monotonically increasing!
             case PrintState(active) =>
                 if active then println(proofState)
                 Some(proofState)
 
-    def qed(ps: ProofState): Option[Thm] = // This needs to go elsewhere
-        if ps.subgoals.size > 0 then return None // is this correct?
+    def qed(ps: ProofState): Option[Thm] =
+        if ps.subgoals.size > 0 then return None
         val res = RoseTree.walk(ps.justificationTree)
         res

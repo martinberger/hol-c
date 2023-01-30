@@ -40,7 +40,7 @@ object TypesPropTests extends Properties("TypesPropTests"):
     property("Type Equality 4") =
         forAll(genTy, genTy, genTy, genTy)((ty1: Ty, ty2: Ty, ty3: Ty, ty4: Ty) => (ty1 == ty3 && ty2 == ty4) == (TyApp(ty1, ty2) == TyApp(ty3, ty4)))
 
-object FreshnessPropTests extends Properties("FreshnessPropTests"): // TODO add tests for substitution
+object FreshnessPropTests extends Properties("FreshnessPropTests"):
     import MyGenerators.{genVar, genTy}
     import Lib.{gensym, fresh, freshVar}
     property("gensym always fresh 1") = forAll((x: String) => Lib.gensym() != Lib.gensym())

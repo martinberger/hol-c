@@ -6,7 +6,7 @@ object Lib:
 
     def gensym(): Int = { global += 1; global }
 
-    def reset(): Unit = { global = -1 } // TODO remove this
+    def reset(): Unit = { global = -1 } // Needed b/c we don't have a fully functional gensym
 
     def fresh(s: Set[String]): String =
         var x     = ""
