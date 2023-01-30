@@ -2,9 +2,6 @@ package Prover
 
 import Context._
 import TaintLattice._
-import Ty._
-import Term._
-import scala.quoted.FromExpr.NoneFromExpr
 
 object ThmClass extends ProofSystem:
 

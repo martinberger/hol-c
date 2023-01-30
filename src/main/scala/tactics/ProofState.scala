@@ -1,9 +1,7 @@
 package Prover
 
 import ThmClass._
-import scala.collection.immutable.Queue
 import Context._
-
 import ProofState.{HoleID, Goal}
 
 case class GoalContext(

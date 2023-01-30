@@ -1,7 +1,5 @@
 package Prover
 
-import java.security.Identity
-
 sealed trait Term
 case class Var(name: String, ty: Ty) extends Term { override def toString: String = s"${name}"      } // ^${ty.toString}" }
 case class Const(c: String, ty: Ty)  extends Term { override def toString: String = s"${c}"         }

@@ -1,10 +1,8 @@
 package Prover
 
-import ProofState.{Goal}
 import ThmClass._
 import Context._
 import ProofState.{qed, mkFreshNamed, act}
-import TypeTests.{tvar_T, tvar_X, int_ty, prop_ty}
 import Tactic.{AndThenList, makeGeneric}
 
 class TestCase(

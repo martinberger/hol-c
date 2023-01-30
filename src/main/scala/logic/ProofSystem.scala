@@ -1,7 +1,6 @@
 package Prover
 
 import Context._
-import TaintLattice._
 
 trait ProofSystem:
 
