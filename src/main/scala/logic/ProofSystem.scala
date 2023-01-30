@@ -39,7 +39,6 @@ trait ProofSystem:
     def eta(gamma: Context, tm: Term, ty: Ty): Option[Thm]
     def lem(gamma: Context, tm: Term): Option[Thm]
     def raa(thm: Thm, tm: Term): Option[Thm]
-
-    def weaken(thm: Thm, tm: Term): Option[Thm] // TODO check if we need this
+    def wk(thm: Thm, tm: Term): Option[Thm]
 
     def show(thm: Thm): (Context, Term, Taint)

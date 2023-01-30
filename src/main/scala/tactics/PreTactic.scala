@@ -460,6 +460,6 @@ object PreTactic:
                     val subgoal             = (tm1 :: gamma, tm2, taint)
                     def justification(ts: List[Thm]): Option[Thm] =
                         ts match
-                            case List(thm) => weaken(thm, tm1)
+                            case List(thm) => wk(thm, tm1)
                             case _         => None
                     Some(List(subgoal), justification)

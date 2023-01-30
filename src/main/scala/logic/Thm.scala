@@ -226,7 +226,7 @@ object ThmClass extends ProofSystem:
             case (gamma, FalseProp(), _) if gamma.contains(Neg(tm)) => Some((remove(gamma, Neg(tm)), tm, C))
             case _                                                  => None
 
-    def weaken(thm: Thm, tm2: Term): Option[Thm] =
+    def wk(thm: Thm, tm2: Term): Option[Thm] =
         val (gamma1, tm1, taint) = thm
         val gamma2               = tm2 :: gamma1
         if !valid(gamma2) then return None
