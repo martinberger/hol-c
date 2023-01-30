@@ -2,9 +2,7 @@ package Prover
 
 object Context:
 
-    type Context = List[Term] // Note: this is not a set to make tactics
-    // easier, see https://github.com/DominicPM/subclassical/issues/16
-    // In the paper, contexts are sets
+    type Context = List[Term]
 
     def valid(gamma: Context): Boolean             = gamma.forall(tm => { Term.check(tm, Prop()) })
     def fv(gamma: Context): Set[Var]               = gamma.toList.foldLeft(Set.empty)((accu, tm) => accu ++ Term.fv(tm))
