@@ -4,12 +4,14 @@ import Context._
 import TypeTests.{tvar_T, tvar_X, int_ty, prop_ty}
 
 object TermTests:
-    val x        = Var("x", Prop())
-    val y        = Var("y", Prop())
-    val z        = Var("z", tvar_T)
-    val m        = Var("m", int_ty)
-    val c        = Const("17", int_ty)
-    val p        = Var("p", prop_ty)
+    val x = Var("x", Prop())
+    val y = Var("y", Prop())
+    val z = Var("z", prop_ty)
+    val m = Var("m", int_ty)
+    val p = Var("p", tvar_T)
+    val q = Var("q", tvar_T)
+    val c = Const("17", int_ty)
+    // val p        = Var("p", prop_ty)
     val fp       = Var("fp", UnaryPredicateTy(int_ty))
     val f2p      = Var("f2p", BinaryPredicateTy(int_ty, tvar_T))
     val c_eq_int = Const("=", BinaryPredicateTy(int_ty, int_ty))
@@ -21,17 +23,19 @@ object TermTests:
         TyApp(TyApp(TyFormer("->", ConstructorKind(ConstructorKind(TyKind))), tvar_T), TyFormer("Prop", TyKind))
       )
     )
-    val eq_x_x        = Equation(x, x, tvar_T)
-    val eq_x_y        = Equation(x, y, tvar_T)
-    val eq_y_x        = Equation(y, x, tvar_T)
-    val eq_y_z        = Equation(y, z, tvar_T)
-    val eq_x_z        = Equation(x, z, tvar_T)
-    val eq_m_m        = Equation(m, m, int_ty)
-    val app_ill_typed = App(c, x)
-    val lam_bad       = Lam(x, x)
-    val lam_complex   = Lam(x, eq_x_y)
-    val lam           = Lam(m, m)
-    val app_good      = App(lam, c)
+    val eq_x_x = Equation(x, x, Prop())
+    val eq_x_y = Equation(x, y, Prop())
+    val eq_y_x = Equation(y, x, Prop())
+    val eq_y_z = Equation(y, z, Prop())
+    val eq_x_z = Equation(x, z, Prop())
+    val eq_m_m = Equation(m, m, int_ty)
+    val eq_p_q = Equation(p, q, tvar_T)
+    val eq_q_q = Equation(q, q, tvar_T)
+    // val app_ill_typed = App(c, x)
+    val lam_bad     = Lam(x, x)
+    val lam_complex = Lam(x, eq_x_y)
+    val lam         = Lam(m, m)
+    val app_good    = App(lam, c)
 
     val gamma_empty: Context = List()
 
@@ -64,7 +68,8 @@ object TermTests:
       ("eq_y_z", eq_y_z),
       ("eq_x_z", eq_x_z),
       ("eq_m_m", eq_m_m),
-      ("app_ill_typed", app_ill_typed),
+      ("eq_q_q", eq_q_q),
+      ("eq_p_q", eq_p_q),
       ("lam_bad", lam_bad),
       ("lam_complex", lam_complex),
       ("lam", lam),
