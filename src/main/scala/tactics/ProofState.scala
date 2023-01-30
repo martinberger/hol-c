@@ -56,7 +56,7 @@ object ProofState:
         val justificationTree = Hole[Thm](holeID)
         ProofState(Map(holeID -> GoalContext(goal, name)), justificationTree, List())
 
-    def mkFresh(goal: Goal): ProofState = // Do we need this?>
+    def mkFresh(goal: Goal): ProofState =
         mkFreshNamed(goal, s"goal_{ Lib.gensym() }")
 
     def insert(ps: ProofState)(holeID: HoleID, preGoals: PreTactic.PreGoals): ProofState =

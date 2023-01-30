@@ -39,7 +39,7 @@ object Term:
             case Const(_, _)   => t
             case App(l, r)     => App(subst(l, t2, x), subst(r, t2, x))
             case Lam(y, body)  =>
-                // assert(!fv(t2).contains(y)) // TODO WARINING: we leave it to the user to avoid free name capture
+                // assert(!fv(t2).contains(y)) // WARINING: we leave it to the user to avoid free name capture
                 if x.name == y.name then t else Lam(y, subst(body, t2, x))
 
     def check(tm: Term, ty: Ty): Boolean =
@@ -61,28 +61,28 @@ object Term:
                     case _            => None
 
 object TrueProp:
-    def apply(): Term = Const("TrueProp", Prop()) 
+    def apply(): Term = Const("TrueProp", Prop())
     def unapply(tm: Term): Boolean =
         tm match
             case Const("TrueProp", Prop()) => true
             case _                         => false
 
 object FalseProp:
-    def apply(): Term = Const("FalseProp", Prop()) 
+    def apply(): Term = Const("FalseProp", Prop())
     def unapply(tm: Term): Boolean =
         tm match
             case Const("FalseProp", Prop()) => true
             case _                          => false
 
 object TrueBool:
-    def apply(): Term = Const("TrueBool", Bool()) 
+    def apply(): Term = Const("TrueBool", Bool())
     def unapply(tm: Term): Boolean =
         tm match
             case Const("TrueBool", Bool()) => true
             case _                         => false
 
 object FalseBool:
-    def apply(): Term = Const("FalseBool", Bool()) 
+    def apply(): Term = Const("FalseBool", Bool())
     def unapply(tm: Term): Boolean =
         tm match
             case Const("FalseBool", Bool()) => true
@@ -127,7 +127,7 @@ object BinaryPredicate:
             case App(App(pred, arg1), arg2) => Some((pred, arg1, arg2))
             case _                          => None
 
-object Binop: 
+object Binop:
     def apply(tm1: Term, tm2: Term, name: String): Term =
         BinaryPredicate(Const(name, FunctionTyPropPropProp()), tm1, tm2)
     def unapply(tm: Term): Option[(Term, Term, String)] =
@@ -156,7 +156,7 @@ object Implies:
             case Binop(tm1, tm2, "implies") => Some((tm1, tm2))
             case _                          => None
 
-object Quantifier: 
+object Quantifier:
     def apply(x: String, ty: Ty, body: Term, constructorName: String): Term =
         val q_ty = QuantifierTy(ty)
         val lam  = Lam(Var(x, ty), body)
@@ -194,4 +194,3 @@ object Equivalence:
         tm match
             case Equation(l, r, Prop()) => Some((l, r))
             case _                      => None
-

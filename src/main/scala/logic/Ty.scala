@@ -21,7 +21,7 @@ object Ty:
             case TyFormer(_, _) => ty
             case TyApp(l, r)    => TyApp(subst(l, ty2, x), subst(r, ty2, x))
 
-    def check(ty: Ty, kind: Kind): Boolean = // TODO replace this by inference
+    def check(ty: Ty, kind: Kind): Boolean =
         (ty, kind) match
             case (TyVar(_), TyKind)         => true
             case (TyFormer(name, kind2), _) => (kind == kind2)
