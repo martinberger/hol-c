@@ -17,4 +17,5 @@ TODO:
 - [ ] Prepare code / repo for publication
 - [X] Add GitHub actions with some basic CI
 - [ ] Add licence & copyright to code (if needed)
+- [ ] Prepare repo for going public
 - [ ] Make repo public
