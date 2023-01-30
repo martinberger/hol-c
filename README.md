@@ -17,7 +17,7 @@ TODO:
 - [X] Add GitHub actions with some basic CI
 - [X] Prepare repo for going public
 - [X] Make short documentation on how to use code
-- [ ] Make `thm` opaque
+- [X] Make `thm` opaque
 - [ ] Add licence & copyright to code (if needed)
 - [ ] Make repo public
 
