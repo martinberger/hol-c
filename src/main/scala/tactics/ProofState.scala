@@ -1,7 +1,6 @@
 package Prover
 
 import Thm._
-//import ThmClass._
 import Context._
 import ProofState.{HoleID, Goal}
 
@@ -28,9 +27,8 @@ class ProofState(
 
 object ProofState:
 
-    type Goal = (Context, Term, Taint) // TODO make this opaque later and why not use Thm?
-    // TODO make this into class for easier pretty printing and better code readability
-    type HoleID = Int // TODO make opaque
+    type Goal = (Context, Term, Taint) // Possible enhancement: make Goal opaque
+    type HoleID = Int                  // Possible enhancement: make HoleID opaque
 
     def subgoalToString(subgoals: Map[HoleID, GoalContext]): String =
         val l = subgoals.toList.map(t => s"   ${t._1} -> ${t._2}")

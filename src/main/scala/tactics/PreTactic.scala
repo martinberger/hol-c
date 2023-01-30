@@ -1,7 +1,6 @@
 package Prover
 
 import Context._
-//import ThmClass._
 import Thm._
 import ProofState.{Goal}
 
