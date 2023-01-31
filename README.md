@@ -1,4 +1,4 @@
-# A modest proposal: explicit support for foundational pluralism
+## A modest proposal: explicit support for foundational pluralism
 
 Target conference: ITP'23 https://mizar.uwb.edu.pl/ITP2023/
 
@@ -28,13 +28,15 @@ TODO:
 >   *A modest proposal: explicit support for foundational pluralism* 
 
 
-by Dominic Mulligan and Martin Berger. A draft version of the paper is available:
-[Arxiv version for downloads](https://arxiv.org/).
+by [Dominic Mulligan](https://dominicpm.github.io/) and [Martin Berger](https://martinfriedrichberger.net/). A draft version of the paper, submitted for publication, is available at:
+[arxiv.org/abs/2303.xxxxx](https://arxiv.org/).
 
 The purpose of this implementation is to serve as a
 proof-of-concept for fine-tuning the logic and for reviewing the paper. It is not intended to enable large-scale proof in HOL(C).
 
-**Compiling, testing and the code.** All relevant code is in the `src` directory and can be compiled by invoking
+**Compiling, testing and the code.** All relevant code is in the `src`
+directory and can be compiled and executed with the `scalac`
+compiler. It most naturally used using `sbt`, by invoking
 
     sbt compile
 
