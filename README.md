@@ -16,7 +16,7 @@ to enable large-scale proof in HOL(C).
 
 **Compiling, testing and running the code.** All relevant code is in
 the `src` directory and can be compiled and executed with the `scalac`
-compiler. It most easily used with `sbt`, by invoking
+compiler. The code is more easily used with `sbt`, by invoking
 
     sbt compile
 
