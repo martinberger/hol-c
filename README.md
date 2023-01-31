@@ -26,7 +26,6 @@ TODO:
       `Eta`,
       `ExE`,
       `ExI`,
-      `FalseE`,
       `IffE1`,
       `IffE2`,
       `Lamcong`,
