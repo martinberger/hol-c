@@ -14,4 +14,4 @@ object Main:
         failedTests += eval(TermTests.run, "Term")
         failedTests += eval(RuleTests.run, "Rule")
         failedTests += eval(Prover.TacTests.run, "Tactic")
-        System.exit(failedTests);
+        System.exit(failedTests)
