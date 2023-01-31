@@ -263,6 +263,33 @@ object TacTests:
 
     val t_peirce = TestCase("Peirce Law (1)", context0, peirce_law, C, makeGeneric(tac_peirce, false))
 
+    val neg_x                      = Neg(x)
+    val neg_y                      = Neg(y)
+    val x_and_y                    = And(x, y)
+    val neg_x_or_neg_y             = Or(neg_x, neg_y)
+    val neg_bra_neg_x_or_neg_y_bra = Neg(neg_x_or_neg_y)
+    val boolean1                   = Implies(x_and_y, neg_bra_neg_x_or_neg_y_bra)
+
+    val tac_boolean1 = List(
+      ImpI_pretac(),
+      NegI_pretac(),
+      DisjE_pretac(neg_x, neg_y)
+    ) ++
+        List(
+          NegE_pretac(y),
+          Init_pretac(),
+          ConjE2_pretac(x),
+          Init_pretac() // This handles right premise of DisjE
+        ) ++
+        List(
+          NegE_pretac(x),
+          Init_pretac(),
+          ConjE1_pretac(y),
+          Init_pretac() // This handles middle premise of DisjE
+        ) ++
+        List(Init_pretac()) // For rightmosgt premise of DisjE
+    val t_boolean1 = TestCase("(a & y) -> !(!x | !y)", context0, boolean1, I, makeGeneric(tac_boolean1, true))
+
     val testsWithQED = List(
       ("t3", t3),
       ("t4", t4),
@@ -290,7 +317,8 @@ object TacTests:
       ("t18", t18),
       ("t_contraposition", t_contraposition),
       ("t_ex_falso_quodlibet", t_ex_falso_quodlibet),
-      ("t_peirce", t_peirce)
+      ("t_peirce", t_peirce),
+      ("t_boolean1", t_boolean1)
     )
     val allTests = /*testsNoQED ++ */ testsWithQED
 
