@@ -1,20 +1,17 @@
 package Prover
 
 sealed trait RoseTree[G, T]
-case class Hole[G, T](i: Int) extends RoseTree[G, T]:
-    override def toString(): String = s"[  ${i}  ]"
-case class Justif[G, T](prove: List[T] => Option[T], children: List[RoseTree[G, T]]) extends RoseTree[G, T]:
-    override def toString(): String = s"Justif(..., ${children})"
+case class Hole[G, T](i: Int)                                                        extends RoseTree[G, T]
+case class Justif[G, T](prove: List[T] => Option[T], children: List[RoseTree[G, T]]) extends RoseTree[G, T]
 
 object RoseTree:
 
-    def walk[G, T](rt: RoseTree[G, T], pad: String = ""): Option[T] =
+    def walk[G, T](rt: RoseTree[G, T]): Option[T] =
         rt match
             case Hole(_) => None
             case Justif(proves, children) =>
-                val pad2 = s"   ${pad}"
                 for (
-                  tmp <- Lib.optionsOut(children.map(walk(_, pad2)));
+                  tmp <- Lib.optionsOut(children.map(walk(_)));
                   res <- proves(tmp)
                 ) yield res
 
