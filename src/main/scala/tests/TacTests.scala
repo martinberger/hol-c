@@ -71,6 +71,17 @@ object TacTests:
     val tac6 = List(Apply(Trans_pretac(y)), select(1), Apply(Init_pretac()), select(2), Apply(Init_pretac()))
     val t6   = TestCase("eq_x_y, eq_y_z |- eq_x_z", context3, eq_x_z, I, tac6)
 
+    val tac_trueI = List(Lift_pretac(I), TrueI_pretac())
+    val t_trueI   = TestCase("|- True : C)", context0, TrueProp(), C, makeGeneric(tac_trueI))
+
+    val false_or_true     = Or(FalseProp(), TrueProp())
+    val tac_false_or_true = List(DisjI2_pretac(), TrueI_pretac())
+    val t_false_or_true   = TestCase("|- false || true", context0, false_or_true, I, makeGeneric(tac_false_or_true))
+
+    val true_or_false     = Or(TrueProp(), FalseProp())
+    val tac_true_or_false = List(DisjI1_pretac(), TrueI_pretac())
+    val t_true_or_false   = TestCase("|- true || false", context0, true_or_false, I, makeGeneric(tac_true_or_false))
+
     val tac7 = List(
       Apply(ImpI_pretac()),
       select(1),
@@ -288,13 +299,43 @@ object TacTests:
           Init_pretac() // This handles middle premise of DisjE
         ) ++
         List(Init_pretac()) // For rightmosgt premise of DisjE
-    val t_boolean1 = TestCase("(a & y) -> !(!x | !y)", context0, boolean1, I, makeGeneric(tac_boolean1, true))
+    val t_boolean1 = TestCase("(a & y) -> !(!x | !y)", context0, boolean1, I, makeGeneric(tac_boolean1))
+
+    val boolean2 = Implies(neg_bra_neg_x_or_neg_y_bra, x_and_y)
+
+    val tac_boolean2 = List(
+      ImpI_pretac(),
+      ConjI_pretac()
+    )
+    val t_boolean2 = TestCase("(a & y) <- !(!x | !y)", context0, boolean2, I, makeGeneric(tac_boolean2))
+
+    val tac_lem_implies_raa = List(
+      ImpI_pretac(),
+      DisjE_pretac(neg_x, x),
+      Lift_pretac(I),
+      Init_pretac()
+    )
+
+    val x_or_not_x                     = Or(x, neg_x)
+    val x_or_not_x_implies_y           = Implies(x_or_not_x, y)
+    val x_or_not_x_implies_y_implies_y = Implies(x_or_not_x_implies_y, y)
+    val tac_19 = List(
+      ImpI_pretac(),
+      ImpE_pretac(x_or_not_x),
+      Lem_pretac(),
+      Lift_pretac(I),
+      Init_pretac()
+    )
+    val t19 = TestCase("", context0, x_or_not_x_implies_y_implies_y, C, makeGeneric(tac_19, true))
 
     val testsWithQED = List(
       ("t3", t3),
       ("t4", t4),
       ("t5", t5),
       ("t6", t6),
+      ("t_trueI", t_trueI),
+      ("t_false_or_true", t_false_or_true),
+      ("t_true_or_false", t_true_or_false),
       ("t7", t7),
       ("t8", t8),
       ("t9", t9),
@@ -318,7 +359,9 @@ object TacTests:
       ("t_contraposition", t_contraposition),
       ("t_ex_falso_quodlibet", t_ex_falso_quodlibet),
       ("t_peirce", t_peirce),
-      ("t_boolean1", t_boolean1)
+      ("t_boolean1", t_boolean1),
+      // ("t_boolean2", t_boolean2)
+      ("t19", t19)
     )
     val allTests = /*testsNoQED ++ */ testsWithQED
 

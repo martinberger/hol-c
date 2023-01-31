@@ -23,8 +23,6 @@ TODO:
       `AllI`,
       `Appcong`,
       `Beta`,
-      `DisjI1`,
-      `DisjI2`,
       `Eta`,
       `ExE`,
       `ExI`,
@@ -32,9 +30,7 @@ TODO:
       `IffE1`,
       `IffE2`,
       `Lamcong`,
-      `Lem`,
       `Subst`,
-      `TrueI`,
       `Tysubst`
 - [ ] Add licence & copyright to code (if needed)
 - [ ] Make repo public
