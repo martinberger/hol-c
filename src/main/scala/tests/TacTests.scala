@@ -326,7 +326,7 @@ object TacTests:
       Lift_pretac(I),
       Init_pretac()
     )
-    val t19 = TestCase("((x | !x) -> y)->)", context0, x_or_not_x_implies_y_implies_y, C, makeGeneric(tac_19, true))
+    val t19 = TestCase("((x | !x) -> y)->)", context0, x_or_not_x_implies_y_implies_y, C, makeGeneric(tac_19))
 
     val false_implies_x = Implies(FalseProp(), x)
     val tac_20 = List(
@@ -335,6 +335,21 @@ object TacTests:
       Init_pretac()
     )
     val t20 = TestCase("", context0, false_implies_x, I, makeGeneric(tac_20))
+
+    val x_iff_y = Equivalence(x, y)
+    val tac_21 = List(
+      IffE1_pretac(x),
+      Init_pretac(),
+      Init_pretac()
+    )
+    val t21 = TestCase("", List(x_iff_y, x), y, I, makeGeneric(tac_21))
+
+    val tac_22 = List(
+      IffE2_pretac(y),
+      Init_pretac(),
+      Init_pretac()
+    )
+    val t22 = TestCase("", List(x_iff_y, y), x, I, makeGeneric(tac_22))
 
     val testsWithQED = List(
       ("t3", t3),
@@ -370,7 +385,9 @@ object TacTests:
       ("t_boolean1", t_boolean1),
       // ("t_boolean2", t_boolean2)
       ("t19", t19),
-      ("t20", t20)
+      ("t20", t20),
+      ("t21", t21),
+      ("t22", t22)
     )
     val allTests = /*testsNoQED ++ */ testsWithQED
 
