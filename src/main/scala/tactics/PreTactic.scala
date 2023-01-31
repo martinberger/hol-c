@@ -321,13 +321,13 @@ object PreTactic:
                 (goal) =>
                     val (gamma, tm, taint) = goal
                     val subgoal            = (gamma, Or(tm1, tm2), taint)
-                    val subgoal1           = (gamma ++ Set(tm1), tm2, taint)
-                    val subgoal2           = (gamma ++ Set(tm2), tm1, taint)
+                    val subgoal1           = (gamma ++ Set(tm1), tm, taint)
+                    val subgoal2           = (gamma ++ Set(tm2), tm, taint)
                     def justification(ts: List[Thm]): Option[Thm] =
                         ts match
                             case List(thm, thm1, thm2) => disjE(thm, thm1, thm2)
                             case _                     => None
-                    Some(List(subgoal), justification)
+                    Some(List(subgoal, subgoal1, subgoal2), justification)
 
             case ImpI_pretac() =>
                 (goal) =>
