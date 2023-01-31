@@ -4,18 +4,14 @@ import Thm._
 import Context._
 import ProofState.{HoleID, Goal}
 
-case class GoalContext(
-    val goal: Goal, // type Goal = (Context, Term, Taint) defined below
-    val goalName: String
-) {
+case class GoalContext(val goal: Goal, val goalName: String):
     override def toString(): String = s"${goal._1} |- ${goal._2} : ${goal._3}"
-}
 
 class ProofState(
     val subgoals: Map[HoleID, GoalContext],
     val justificationTree: RoseTree[Goal, Thm],
     val selected: List[HoleID]
-) {
+):
     override def toString(): String = s"""
         +++++++++++++++++++++++++++++
         subgoals = \n${ProofState.subgoalToString(subgoals)}
@@ -23,12 +19,11 @@ class ProofState(
         all holeIDs = ${subgoals.keySet}
         +++++++++++++++++++++++++++++
     """
-}
 
 object ProofState:
 
-    type Goal = (Context, Term, Taint) // Possible enhancement: make Goal opaque
-    type HoleID = Int                  // Possible enhancement: make HoleID opaque
+    type Goal   = (Context, Term, Taint) // Possible enhancement: make Goal opaque
+    type HoleID = Int                    // Possible enhancement: make HoleID opaque
 
     def subgoalToString(subgoals: Map[HoleID, GoalContext]): String =
         val l = subgoals.toList.map(t => s"   ${t._1} -> ${t._2}")
@@ -86,7 +81,7 @@ object ProofState:
                 ) yield res
             case Id() => Some(proofState)
             case FailWith(msg) => println(msg); None
-            // Note: passing on error message.
+            // NOTE: passing on error message.
             // requires replacing Option[ProofState] with something
             // more sophisticated like Either[String, ProofState]
             case Try(tac) =>
@@ -102,11 +97,11 @@ object ProofState:
                 val selectedHoleID = selectedSubgoals.map(nameToHoleID(proofState)).flatten
                 val newSelection   = selectedSubgoals :: (proofState.selected.filter(i => !selectedSubgoals.contains(i)))
                 Some(ProofState(proofState.subgoals, proofState.justificationTree, selectedHoleID))
-            case SelectLast() => // NOTE Experimental, if it works can be unified with Select(l) above
+            case SelectLast() => // NOTE: Experimental, if it works can be unified with Select(l) above
                 val hids = proofState.subgoals.keySet
-                if hids.isEmpty then return None // NOTE very strict for this experiment. We may also return old proof state
+                if hids.isEmpty then return None // NOTE: very strict for this experiment. We may also return old proof state
                 Some(ProofState(proofState.subgoals, proofState.justificationTree, List(hids.max)))
-            // SelectLast requires that  goal names be monotonically increasing to work!
+            // NOTE: SelectLast requires that goal names be monotonically increasing to work!
             case PrintState(active) =>
                 if active then println(proofState)
                 Some(proofState)
