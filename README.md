@@ -19,28 +19,23 @@ TODO:
 - [X] Make short documentation on how to use code
 - [X] Make `thm` opaque
 - [ ] Make test case for the following pre-tactics: 
-      `AllE_pretac`,
-      `AllI_pretac`,
-      `Appcong_pretac`,
-      `Beta_pretac`,
-      `ConjE2_pretac`,
-      `ConjI_pretac`,
-      `DisjI1_pretac`,
-      `DisjI2_pretac`,
-      `Eta_pretac`,
-      `ExE_pretac`,
-      `ExI_pretac`,
-      `FalseE_pretac`,
-      `IffE1_pretac`,
-      `IffE2_pretac`,
-      `IffI_pretac`,
-      `Lamcong_pretac`,
-      `Lem_pretac`,
-      `NegI_pretac`,
-      `Subst_pretac`,
-      `Trans_pretac`,
-      `TrueI_pretac`,
-      `Tysubst_pretac`
+      `AllE`,
+      `AllI`,
+      `Appcong`,
+      `Beta`,
+      `DisjI1`,
+      `DisjI2`,
+      `Eta`,
+      `ExE`,
+      `ExI`,
+      `FalseE`,
+      `IffE1`,
+      `IffE2`,
+      `Lamcong`,
+      `Lem`,
+      `Subst`,
+      `TrueI`,
+      `Tysubst`
 - [ ] Add licence & copyright to code (if needed)
 - [ ] Make repo public
 
