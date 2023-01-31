@@ -1,3 +1,7 @@
+## 31.1.2023
+- DONE Proved (a & y) -> !(!x | !y)
+- DONE Added a lot more simple test cases
+- DONE Started implementing a tactics transformer for Goedel-Gentzen style double-negation. Very early work
 ## 30.1.2023
 - DONE Can I import `ThmClass` only as/via `ProofSystem`?
 - DONE make `Goal` opaque?
