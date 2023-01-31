@@ -1,18 +1,19 @@
 package Prover
 
-import Context._
-import TaintLattice._
+import Context.{Context, valid, remove, fv, tySubst}
+import TaintLattice.{leq}
+import Term.{check}
 
 case class Thm private (ctx: Context, tm: Term, t: Taint)
 
 object Thm:
 
     def init(gamma: Context, phi: Term): Option[Thm] =
-        if valid(gamma) && gamma.contains(phi) && Term.check(phi, Prop()) then Some(Thm(gamma, phi, I))
+        if valid(gamma) && gamma.contains(phi) && check(phi, Prop()) then Some(Thm(gamma, phi, I))
         else None
 
     def refl(gamma: Context, tm: Term, ty: Ty): Option[Thm] =
-        if valid(gamma) && Term.check(tm, ty) then
+        if valid(gamma) && check(tm, ty) then
             val phi = Equation(tm, tm, ty)
             Some(Thm(gamma, phi, I))
         else None
@@ -34,7 +35,7 @@ object Thm:
 
     def lcong(thm: Thm, x: Var): Option[Thm] =
         val Thm(gamma, tm, taint) = thm
-        if Context.fv(gamma).contains(x) then return None
+        if fv(gamma).contains(x) then return None
         tm match
             case Equation(l, r, ty) =>
                 val tm1 = Lam(x, l)
@@ -59,14 +60,14 @@ object Thm:
 
     def beta(gamma: Context, lam: Lam, src: Ty, target: Ty, tm: Term): Option[Thm] =
         val Lam(x, body) = lam
-        if !valid(gamma) || !Term.check(lam, FunctionTy(src, target)) || !Term.check(tm, src) || x.ty != src then return None
+        if !valid(gamma) || !check(lam, FunctionTy(src, target)) || !check(tm, src) || x.ty != src then return None
         val newTm = Equation(App(lam, tm), Term.subst(body, tm, x), target)
         Some(Thm(gamma, newTm, I))
 
     def tysubst(thm: Thm, ty: Ty, tv: TyVar): Option[Thm] =
         val Thm(gamma, phi, taint) = thm
         if !Ty.check(ty, TyKind) then return None
-        val newGamma = Context.tySubst(gamma, ty, tv)
+        val newGamma = tySubst(gamma, ty, tv)
         val newTm    = Term.tySubst(phi, ty, tv)
         Some(Thm(newGamma, newTm, taint))
 
@@ -105,7 +106,7 @@ object Thm:
         Some(Thm(gamma, TrueProp(), I))
 
     def falseE(thm: Thm, phi: Term): Option[Thm] =
-        if !Term.check(phi, Prop()) then return None
+        if !check(phi, Prop()) then return None
         thm match
             case Thm(gamma, FalseProp(), taint) => Some(Thm(gamma, phi, taint))
             case _                              => None
@@ -127,12 +128,12 @@ object Thm:
             case _                            => None
 
     def disjI1(thm: Thm, tm2: Term): Option[Thm] =
-        if !Term.check(tm2, Prop()) then return None
+        if !check(tm2, Prop()) then return None
         val Thm(gamma, tm1, taint) = thm
         Some(Thm(gamma, Or(tm1, tm2), taint))
 
     def disjI2(thm: Thm, tm1: Term): Option[Thm] =
-        if !Term.check(tm1, Prop()) then return None
+        if !check(tm1, Prop()) then return None
         val Thm(gamma, tm2, taint) = thm
         Some(Thm(gamma, Or(tm1, tm2), taint))
 
@@ -177,17 +178,17 @@ object Thm:
     def allE(thm: Thm, tm: Term): Option[Thm] =
         val Thm(gamma, phi, taint) = thm
         phi match
-            case Forall(x, ty, body) if Term.check(tm, ty) =>
+            case Forall(x, ty, body) if check(tm, ty) =>
                 Some(Thm(gamma, Term.subst(phi, tm, Var(x, ty)), taint))
             case _ => None
 
     def allI(thm: Thm, x: Var): Option[Thm] =
         val Thm(gamma, tm, taint) = thm
-        if Context.fv(gamma).contains(x) then return None
+        if fv(gamma).contains(x) then return None
         Some(Thm(gamma, Forall(x.name, x.ty, tm), taint))
 
     def exI(thm: Thm, phi: Term, x: Var, tm: Term): Option[Thm] =
-        if !Term.check(tm, x.ty) || !Term.check(phi, Prop()) then return None
+        if !check(tm, x.ty) || !check(phi, Prop()) then return None
         val Thm(gamma, tm2, taint) = thm
         val tm3                    = Term.subst(phi, tm, x)
         if tm3 != tm2 then return None
@@ -202,13 +203,13 @@ object Thm:
                 val y   = Var(name, ty)
                 val tm3 = Term.subst(phi, y, Var(x, ty))
                 if gamma1 != remove(gamma2, tm2) || !gamma2.contains(tm3) ||
-                    (Context.fv(gamma1) ++ Term.fv(phi)).contains(y)
+                    (fv(gamma1) ++ Term.fv(phi)).contains(y)
                 then return None
                 Some(Thm(gamma1, tm2, taint1))
             case _ => None
 
     def eta(gamma: Context, tm: Term, ty: Ty): Option[Thm] =
-        if !Context.valid(gamma) || !Term.check(tm, ty) then return None
+        if !valid(gamma) || !check(tm, ty) then return None
         (tm, ty) match
             case (Lam(x, App(f, y)), FunctionTy(l, r)) if l == x.ty && x == y =>
                 if Term.fv(f).contains(x) then return None
@@ -217,7 +218,7 @@ object Thm:
             case _ => None
 
     def lem(gamma: Context, tm: Term): Option[Thm] =
-        if !valid(gamma) || !Term.check(tm, Prop()) then return None
+        if !valid(gamma) || !check(tm, Prop()) then return None
         Some(Thm(gamma, Or(tm, Neg(tm)), C))
 
     def raa(thm: Thm, tm: Term): Option[Thm] =
