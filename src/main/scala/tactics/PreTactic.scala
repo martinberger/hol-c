@@ -205,7 +205,7 @@ object PreTactic:
                                 ts match
                                     case List(thm) => inst(thm, ty, tv)
                                     case _         => None
-                            Some(List(), justification)
+                            Some(List(subgoal), justification)
                         case _ => None
 
             case Subst_pretac(gamma: Context, phi: Term, r: Term, x: Var) =>
