@@ -351,6 +351,42 @@ object TacTests:
     )
     val t22 = TestCase("", List(x_iff_y, y), x, I, makeGeneric(tac_22))
 
+    val tvar_t1 = TyVar("T1")
+    val tvar_t2 = TyVar("T2")
+    val t_PV    = FunctionTy(Prop(), tvar_t1)
+    val t_VP    = FunctionTy(tvar_t2, Prop())
+    val t_VV    = FunctionTy(tvar_t2, tvar_t1)
+
+    val x_VV = Var("x_VV", t_VV)
+    val y_VV = Var("y_VV", t_VV)
+    val z_VV = Var("z_VV", t_VV)
+
+    val eq_xy          = Equation(x_VV, y_VV, t_VV)
+    val eq_yz          = Equation(y_VV, z_VV, t_VV)
+    val context_VV     = List(eq_xy)
+    val context_subst1 = tySubst(context_VV, Prop(), tvar_t1)
+    val context_subst2 = tySubst(context_subst1, Prop(), tvar_t2)
+    val eq_xy_subst1   = Term.tySubst(eq_xy, Prop(), tvar_t1)
+    val eq_xy_subst2   = Term.tySubst(eq_xy_subst1, Prop(), tvar_t2)
+
+    val tac_23 = List(
+      Inst_pretac(context_subst1, eq_xy_subst1, Prop(), tvar_t2),
+      Inst_pretac(context_VV, eq_xy, Prop(), tvar_t1),
+      Init_pretac()
+    )
+    val t23 = TestCase("t23", context_subst2, eq_xy_subst2, I, makeGeneric(tac_23))
+
+    val int_ty     = TyFormer("Int", TyKind)
+    val ty_int_int = FunctionTy(int_ty, int_ty)
+    val x_int      = Var("m", ty_int_int)
+    val eq_24      = Equation(x_int, x_int, ty_int_int)
+    val eq_lam_lam = Equation(lam, lam, ty_int_int)
+    val tac_24 = List(
+      Subst_pretac(context0, eq_24, lam, x_int),
+      Refl_pretac()
+    )
+    val t24 = TestCase("t24", context0, eq_lam_lam, I, makeGeneric(tac_24))
+
     val testsWithQED = List(
       ("t3", t3),
       ("t4", t4),
@@ -387,7 +423,9 @@ object TacTests:
       ("t19", t19),
       ("t20", t20),
       ("t21", t21),
-      ("t22", t22)
+      ("t22", t22),
+      ("t23", t23),
+      ("t24", t24)
     )
     val allTests = /*testsNoQED ++ */ testsWithQED
 
