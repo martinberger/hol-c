@@ -12,8 +12,8 @@ case class Lift_pretac(smallTaint: Taint)                             extends Pr
 case class Refl_pretac()                                              extends PreTactic
 case class Sym_pretac()                                               extends PreTactic
 case class Trans_pretac(tm: Term)                                     extends PreTactic
-case class Lamcong_pretac()                                           extends PreTactic
-case class Appcong_pretac()                                           extends PreTactic
+case class Lcong_pretac()                                             extends PreTactic
+case class Acong_pretac()                                             extends PreTactic
 case class Beta_pretac()                                              extends PreTactic
 case class Inst_pretac(gamma: Context, tm: Term, ty: Ty, tv: TyVar)   extends PreTactic
 case class Eta_pretac()                                               extends PreTactic
@@ -138,7 +138,7 @@ object PreTactic:
                             Some(List(subgoal1, subgoal2), justification)
                         case _ => None
 
-            case Lamcong_pretac() =>
+            case Lcong_pretac() =>
                 (goal) =>
                     val (gamma, tm, taint) = goal
                     tm match
@@ -154,7 +154,7 @@ object PreTactic:
                                 case _ => None
                         case _ => None
 
-            case Appcong_pretac() =>
+            case Acong_pretac() =>
                 (goal) =>
                     val (gamma, tm, taint) = goal
                     tm match
