@@ -218,7 +218,7 @@ object PreTactic:
                                 ts match
                                     case List(thm) => Thm.subst(thm, r, x.ty, x)
                                     case _         => None
-                            Some(List(), justification)
+                            Some(List(subgoal), justification)
                         case _ => None
 
             case IffE1_pretac(tmL: Term) =>
