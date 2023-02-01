@@ -64,10 +64,10 @@ object Thm:
         val newTm = Equation(App(lam, tm), Term.subst(body, tm, x), target)
         Some(Thm(gamma, newTm, I))
 
-    def tysubst(thm: Thm, ty: Ty, tv: TyVar): Option[Thm] =
+    def inst(thm: Thm, ty: Ty, tv: TyVar): Option[Thm] =
         val Thm(gamma, phi, taint) = thm
         if !Ty.check(ty, TyKind) then return None
-        val newGamma = tySubst(gamma, ty, tv)
+        val newGamma = Context.tySubst(gamma, ty, tv)
         val newTm    = Term.tySubst(phi, ty, tv)
         Some(Thm(newGamma, newTm, taint))
 

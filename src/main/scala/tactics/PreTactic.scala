@@ -5,38 +5,38 @@ import Thm._
 import ProofState.{Goal}
 
 sealed trait PreTactic
-case class Init_pretac()                                               extends PreTactic
-case class TrueI_pretac()                                              extends PreTactic
-case class FalseE_pretac()                                             extends PreTactic
-case class Lift_pretac(smallTaint: Taint)                              extends PreTactic
-case class Refl_pretac()                                               extends PreTactic
-case class Sym_pretac()                                                extends PreTactic
-case class Trans_pretac(tm: Term)                                      extends PreTactic
-case class Lamcong_pretac()                                            extends PreTactic
-case class Appcong_pretac()                                            extends PreTactic
-case class Beta_pretac()                                               extends PreTactic
-case class Tysubst_pretac(gamma: Context, tm: Term, ty: Ty, tv: TyVar) extends PreTactic
-case class Eta_pretac()                                                extends PreTactic
-case class Subst_pretac(gamma: Context, tm1: Term, tm2: Term, x: Var)  extends PreTactic
-case class IffE1_pretac(tmL: Term)                                     extends PreTactic
-case class IffE2_pretac(tmR: Term)                                     extends PreTactic
-case class IffI_pretac()                                               extends PreTactic
-case class ConjI_pretac()                                              extends PreTactic
-case class ConjE1_pretac(tmR: Term)                                    extends PreTactic
-case class ConjE2_pretac(tmL: Term)                                    extends PreTactic
-case class DisjI1_pretac()                                             extends PreTactic
-case class DisjI2_pretac()                                             extends PreTactic
-case class DisjE_pretac(tm1: Term, tm2: Term)                          extends PreTactic
-case class ImpI_pretac()                                               extends PreTactic
-case class ImpE_pretac(tm1: Term)                                      extends PreTactic
-case class NegI_pretac()                                               extends PreTactic
-case class NegE_pretac(tm: Term)                                       extends PreTactic
-case class AllI_pretac()                                               extends PreTactic
-case class AllE_pretac(phi: Term, r: Term, x: Var)                     extends PreTactic
-case class ExI_pretac(r: Term)                                         extends PreTactic
-case class ExE_pretac(phi: Term, x: Var, y: Var)                       extends PreTactic
-case class Lem_pretac()                                                extends PreTactic
-case class Raa_pretac(taint: Taint)                                    extends PreTactic
+case class Init_pretac()                                              extends PreTactic
+case class TrueI_pretac()                                             extends PreTactic
+case class FalseE_pretac()                                            extends PreTactic
+case class Lift_pretac(smallTaint: Taint)                             extends PreTactic
+case class Refl_pretac()                                              extends PreTactic
+case class Sym_pretac()                                               extends PreTactic
+case class Trans_pretac(tm: Term)                                     extends PreTactic
+case class Lamcong_pretac()                                           extends PreTactic
+case class Appcong_pretac()                                           extends PreTactic
+case class Beta_pretac()                                              extends PreTactic
+case class Inst_pretac(gamma: Context, tm: Term, ty: Ty, tv: TyVar)   extends PreTactic
+case class Eta_pretac()                                               extends PreTactic
+case class Subst_pretac(gamma: Context, tm1: Term, tm2: Term, x: Var) extends PreTactic
+case class IffE1_pretac(tmL: Term)                                    extends PreTactic
+case class IffE2_pretac(tmR: Term)                                    extends PreTactic
+case class IffI_pretac()                                              extends PreTactic
+case class ConjI_pretac()                                             extends PreTactic
+case class ConjE1_pretac(tmR: Term)                                   extends PreTactic
+case class ConjE2_pretac(tmL: Term)                                   extends PreTactic
+case class DisjI1_pretac()                                            extends PreTactic
+case class DisjI2_pretac()                                            extends PreTactic
+case class DisjE_pretac(tm1: Term, tm2: Term)                         extends PreTactic
+case class ImpI_pretac()                                              extends PreTactic
+case class ImpE_pretac(tm1: Term)                                     extends PreTactic
+case class NegI_pretac()                                              extends PreTactic
+case class NegE_pretac(tm: Term)                                      extends PreTactic
+case class AllI_pretac()                                              extends PreTactic
+case class AllE_pretac(phi: Term, r: Term, x: Var)                    extends PreTactic
+case class ExI_pretac(r: Term)                                        extends PreTactic
+case class ExE_pretac(phi: Term, x: Var, y: Var)                      extends PreTactic
+case class Lem_pretac()                                               extends PreTactic
+case class Raa_pretac(taint: Taint)                                   extends PreTactic
 
 // ------------ Derived ------------
 
@@ -195,7 +195,7 @@ object PreTactic:
                             Some(List(), justification)
                         case _ => None
 
-            case Tysubst_pretac(gamma: Context, tm: Term, ty: Ty, tv: TyVar) =>
+            case Inst_pretac(gamma: Context, tm: Term, ty: Ty, tv: TyVar) =>
                 (goal) =>
                     val (gamma1, tm1, taint) = goal
                     (Context.tySubst(gamma, ty, tv) == gamma1, Term.tySubst(tm, ty, tv) == tm1) match
@@ -203,7 +203,7 @@ object PreTactic:
                             val subgoal = (gamma, tm, taint)
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
-                                    case List(thm) => tysubst(thm, ty, tv)
+                                    case List(thm) => inst(thm, ty, tv)
                                     case _         => None
                             Some(List(), justification)
                         case _ => None
