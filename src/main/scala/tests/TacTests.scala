@@ -300,7 +300,7 @@ object TacTests:
           Init_pretac() // This handles middle premise of DisjE
         ) ++
         List(Init_pretac()) // For rightmosgt premise of DisjE
-    val t_boolean1 = TestCase("(a & y) -> !(!x | !y)", context0, boolean1, I, makeGeneric(tac_boolean1))
+    val t_boolean1 = TestCase("(x & y) -> !(!x | !y)", context0, boolean1, I, makeGeneric(tac_boolean1))
 
     val boolean2 = Implies(neg_bra_neg_x_or_neg_y_bra, x_and_y)
 
@@ -308,7 +308,7 @@ object TacTests:
       ImpI_pretac(),
       ConjI_pretac()
     )
-    val t_boolean2 = TestCase("(a & y) <- !(!x | !y)", context0, boolean2, I, makeGeneric(tac_boolean2))
+    val t_boolean2 = TestCase("(x & y) <- !(!x | !y)", context0, boolean2, I, makeGeneric(tac_boolean2))
 
     val tac_lem_implies_raa = List(
       ImpI_pretac(),
