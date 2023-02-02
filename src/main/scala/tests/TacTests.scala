@@ -378,14 +378,49 @@ object TacTests:
 
     val int_ty     = TyFormer("Int", TyKind)
     val ty_int_int = FunctionTy(int_ty, int_ty)
-    val x_int      = Var("m", ty_int_int)
-    val eq_24      = Equation(x_int, x_int, ty_int_int)
+    val m_int      = Var("m", ty_int_int)
+    val eq_24      = Equation(m_int, m_int, ty_int_int)
     val eq_lam_lam = Equation(lam, lam, ty_int_int)
     val tac_24 = List(
-      Subst_pretac(context0, eq_24, lam, x_int),
+      Subst_pretac(context0, eq_24, lam, m_int),
       Refl_pretac()
     )
-    val t24 = TestCase("t24", context0, eq_lam_lam, I, makeGeneric(tac_24))
+    val t24 = TestCase("subst_pretac", context0, eq_lam_lam, I, makeGeneric(tac_24))
+
+    val n1      = Var("n1", int_ty)
+    val n2      = Var("n2", int_ty)
+    val f1_int  = Var("f1", ty_int_int)
+    val f2_int  = Var("f2", ty_int_int)
+    val eq25_f  = Equation(f1_int, f2_int, ty_int_int)
+    val eq25_n  = Equation(n1, n2, int_ty)
+    val app25   = Equation(App(f1_int, n1), App(f2_int, n2), int_ty)
+    val gamma25 = List(eq25_f, eq25_n)
+
+    val tac_25 = List(
+      Acong_pretac(),
+      Init_pretac(),
+      Init_pretac()
+    )
+    val t25 = TestCase("acong_pretac", gamma25, app25, I, makeGeneric(tac_25))
+
+    val lam26 = Lam(n1, n1)
+    val eq26  = Equation(lam26, lam26, ty_int_int)
+    val tac_26 = List(
+      Lcong_pretac(),
+      Refl_pretac()
+    )
+    val t26 = TestCase("lcong_pretac", context0, eq26, I, makeGeneric(tac_26))
+
+    val eq27   = Equation(App(lam26, n2), n2, int_ty)
+    val tac_27 = List(Beta_pretac())
+    val t27    = TestCase("beta", context0, eq27, I, makeGeneric(tac_27))
+
+    val f       = Var("f", ty_int_int)
+    val fn1     = App(f, n1)
+    val lam_fn1 = Lam(n1, fn1)
+    val eq28    = Equation(lam_fn1, f, ty_int_int)
+    val tac_28  = List(Eta_pretac())
+    val t28     = TestCase("eta", context0, eq28, I, makeGeneric(tac_28))
 
     val testsWithQED = List(
       ("t3", t3),
@@ -425,7 +460,11 @@ object TacTests:
       ("t21", t21),
       ("t22", t22),
       ("t23", t23),
-      ("t24", t24)
+      ("t24", t24),
+      ("t25", t25),
+      ("t26", t26),
+      ("t27", t27),
+      ("t28", t28)
     )
     val allTests = /*testsNoQED ++ */ testsWithQED
 
