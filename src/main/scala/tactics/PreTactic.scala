@@ -51,6 +51,7 @@ object PreTactic:
     // type PreTactic = Goal => Option[PreGoals]
 
     def apply(pretac: PreTactic): Goal => Option[PreGoals] =
+        println(s"-------------> ${pretac}")
         pretac match
             case Init_pretac() =>
                 (goal: Goal) =>
@@ -423,10 +424,10 @@ object PreTactic:
                     goal match
                         case (gamma, psi, taint) if x.ty == y.ty && !fv(gamma).union(Term.fv(phi)).contains(y) =>
                             val subgoal1 = (gamma, Exists(x.name, x.ty, phi), taint)
-                            val subgoal2 = (Term.subst(phi, x, y) :: gamma, psi, taint)
+                            val subgoal2 = (Term.subst(phi, y, x) :: gamma, psi, taint)
                             def justification(ts: List[Thm]): Option[Thm] =
                                 ts match
-                                    case List(thm1, thm2) => exE(thm1, thm2, x.name)
+                                    case List(thm1, thm2) => exE(thm1, thm2, y.name)
                                     case _                => None
                             Some(List(subgoal1, subgoal2), justification)
                         case _ => None
