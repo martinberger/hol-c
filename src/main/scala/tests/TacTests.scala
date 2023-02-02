@@ -4,6 +4,7 @@ import Thm._
 import Context._
 import ProofState.{qed, mkFreshNamed, act}
 import Tactic.{AndThenList, makeGeneric}
+import javax.naming.InitialContext
 
 class TestCase(
     val name: String,
@@ -422,6 +423,36 @@ object TacTests:
     val tac_28  = List(Eta_pretac())
     val t28     = TestCase("eta", context0, eq28, I, makeGeneric(tac_28))
 
+    val tac_29 = List(AllI_pretac(), Refl_pretac())
+    val t29    = TestCase("allI", context0, Forall("x", int_ty, eq_m_m), I, makeGeneric(tac_29))
+
+    val phi30 = Forall("n1", int_ty, eq25_n)
+    val tac_30 = List(
+      AllE_pretac(eq25_n, n2, n1),
+      Init_pretac()
+    )
+    val eq_30 = Equation(n2, n2, int_ty)
+    val t30   = TestCase("AllE_pretac", List(phi30), eq_30, I, makeGeneric(tac_30))
+
+    val tac_31 = List(
+      ExI_pretac(n2),
+      Refl_pretac()
+    )
+    val eq_31 = Equation(n1, n2, int_ty)
+    val t31   = TestCase("ExI", context0, Exists("n1", int_ty, eq_31), I, makeGeneric(tac_31))
+
+    val n3       = Var("n3", int_ty)
+    val eq32_1_1 = Equation(n1, n2, int_ty)
+    val tac_32 = List(
+      ExE_pretac(eq32_1_1, n1, n3),
+      Init_pretac(),
+      Init_pretac()
+    )
+    val eq32    = Equation(n3, n2, int_ty)
+    val tm32    = Exists("n1", int_ty, eq32_1_1)
+    val gamma32 = List(tm32)
+    val t32     = TestCase("ExE", gamma32, eq32, I, makeGeneric(tac_32))
+
     val testsWithQED = List(
       ("t3", t3),
       ("t4", t4),
@@ -464,7 +495,11 @@ object TacTests:
       ("t25", t25),
       ("t26", t26),
       ("t27", t27),
-      ("t28", t28)
+      ("t28", t28),
+      ("t29", t29),
+      ("t30", t30),
+      ("t31", t31),
+      ("t32", t32)
     )
     val allTests = /*testsNoQED ++ */ testsWithQED
 
