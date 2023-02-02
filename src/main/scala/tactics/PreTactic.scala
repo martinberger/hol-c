@@ -177,9 +177,9 @@ object PreTactic:
                     tm match
                         case Equation(App(lam @ Lam(x, body), arg), r, ty_target) if r == Term.subst(body, arg, x) =>
                             def justification(ts: List[Thm]): Option[Thm] =
-                                (ts, Term.tyInference(lam)) match
-                                    case (List(), Some(ty_src)) => beta(gamma, lam, ty_src, ty_target, r)
-                                    case _                      => None
+                                ts match
+                                    case List() => beta(gamma, lam, x.ty, ty_target, r)
+                                    case _      => None
                             Some(List(), justification)
                         case _ => None
 
