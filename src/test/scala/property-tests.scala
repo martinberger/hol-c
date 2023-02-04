@@ -24,6 +24,8 @@ object MyGenerators:
     val genLam           = for { x <- genVar; b <- genTm } yield Lam(x, b)
     def genTm: Gen[Term] = oneOf(genVar, genConst, lzy(genApp), lzy(genLam))
 
+    def genTaint: Gen[Taint] = oneOf(I, W, C, CH)
+
 object KindsPropTests extends Properties("KindsPropTests"):
     import MyGenerators.{genKind}
     property("Kinds Equality 1") = forAll(genKind)((k: Kind) => k == k)
@@ -70,3 +72,16 @@ object TermPropTests extends Properties("TermPropTests"):
                 (Var(x, tv1) == tySubst(Var(x, tv1), ty, tv2))
         })
     )
+
+object TaintPropTests extends Properties("TaintPropTests"):
+
+    import TaintLattice._
+    import MyGenerators.{genTaint}
+    property("Reflexivity") = forAll(genTaint)((t: Taint) => lub(t, t) == t)
+    property("Symmetry") = forAll(genTaint, genTaint)((t1: Taint, t2: Taint) => lub(t1, t2) == lub(t2, t1))
+    property("Associativity") =
+        forAll(genTaint, genTaint, genTaint)((t1: Taint, t2: Taint, t3: Taint) => lub(lub(t1, t2), t3) == lub(t1, lub(t2, t3)))
+    property("Top") = forAll(genTaint)((t: Taint) => leq(t, top))
+    property("C") = forAll(genTaint)((t: Taint) => t != top ==> leq(t, C))
+    property("W") = forAll(genTaint)((t: Taint) => t != bot ==> leq(W, t))
+    property("Bottom") = forAll(genTaint)((t: Taint) => leq(bot, t))

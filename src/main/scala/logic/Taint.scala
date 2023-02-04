@@ -33,6 +33,9 @@ object TaintLattice extends JoinSemilattice:
         (t1, t2) match
             case (t1, t2) if t1 == t2 => t1
             case (I, t)               => t
+            case (t, I)               => t
             case (W, t)               => t
+            case (t, W)               => t
             case (C, t)               => t
-            case (CH, t)              => t
+            case (t, C)               => t
+            case (_, _)               => CH
