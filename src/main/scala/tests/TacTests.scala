@@ -52,7 +52,7 @@ class TestCase(
 object TacTests:
 
     import TermTests._
-    val printState: Tactic = PrintState(false) // For easy global changes of logging
+    val printState: Tactic = PrintState() // For easy global changes of logging
 
     val context0: Context = List()
     val context1: Context = List(eq_x_x)
@@ -327,7 +327,7 @@ object TacTests:
       Lift_pretac(I),
       Init_pretac()
     )
-    val t19 = TestCase("((x | !x) -> y)->)", context0, x_or_not_x_implies_y_implies_y, C, makeGeneric(tac_19))
+    val t19 = TestCase("((x | !x) -> y)->y)", context0, x_or_not_x_implies_y_implies_y, C, makeGeneric(tac_19))
 
     val false_implies_x = Implies(FalseProp(), x)
     val tac_20 = List(
@@ -335,7 +335,7 @@ object TacTests:
       FalseE_pretac(),
       Init_pretac()
     )
-    val t20 = TestCase("", context0, false_implies_x, I, makeGeneric(tac_20))
+    val t20 = TestCase("false implies x", context0, false_implies_x, I, makeGeneric(tac_20))
 
     val x_iff_y = Equivalence(x, y)
     val tac_21 = List(

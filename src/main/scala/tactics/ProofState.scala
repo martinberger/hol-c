@@ -102,8 +102,8 @@ object ProofState:
                 if hids.isEmpty then return None // NOTE: very strict for this experiment. We may also return old proof state
                 Some(ProofState(proofState.subgoals, proofState.justificationTree, List(hids.max)))
             // NOTE: SelectLast requires that goal names be monotonically increasing to work!
-            case PrintState(active) =>
-                if active then println(proofState)
+            case PrintState() =>
+                println(proofState)
                 Some(proofState)
 
     def qed(ps: ProofState): Option[Thm] =
