@@ -9,7 +9,7 @@ introduced in the paper
 
 by [Dominic Mulligan](https://dominicpm.github.io/) and [Martin
 Berger](https://martinfriedrichberger.net/). A draft version of the
-paper has been submitted for publication and will be made public soon.  
+paper has been submitted for publication and will be made public soon. 
 The purpose of this implementation is to serve as a proof-of-concept 
 for fine-tuning the logic and for reviewing the paper. It is not 
 intended to enable large-scale proof in HOL(C).
