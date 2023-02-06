@@ -10,9 +10,17 @@ introduced in the paper
 by [Dominic Mulligan](https://dominicpm.github.io/) and [Martin
 Berger](https://martinfriedrichberger.net/). A draft version of the
 paper has been submitted for publication and will be made public soon. 
-The purpose of this implementation is to serve as a proof-of-concept 
-for fine-tuning the logic and for reviewing the paper. It is not 
-intended to enable large-scale proof in HOL(C).
+
+HOL(C) is a natural deduction presentation of HOL, but with a ternary
+judgement $\Gamma \vdash \phi : l$, adding a notion of *taint* $l$ to
+the more common binary judgements $\Gamma \vdash \phi$ between
+assumptions $\Gamma$ and formulae $\phi$. Taint can be seen as a kind
+of 'typing system' for proofs that explicitly tracks how classically
+or constructive a proof is, e.g. is $\phi$ deduced fom $\Gamma$ using
+*Excluded Middle* or not.  The purpose of this implementation is to
+serve as a proof-of-concept for fine-tuning the logic and for
+reviewing the paper. It is not intended to enable large-scale proof in
+HOL(C).
 
 **Compiling, testing and running the code.** All relevant code is in
 the `src` directory and can be compiled and executed with the `scalac`
