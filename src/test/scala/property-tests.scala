@@ -4,7 +4,6 @@ import org.scalacheck.Properties
 import org.scalacheck.Prop.{forAll, propBoolean}
 import org.scalacheck._
 import Gen._
-// import org.scalacheck.Arbitrary
 
 object MyGenerators:
     val genTyKind = const(TyKind)
@@ -67,14 +66,10 @@ object TermPropTests extends Properties("TermPropTests"):
     property("Substitution 2") = forAll(genVar, genVar, genTm)((x: Var, y: Var, t: Term) => (x != y) ==> (x == subst(x, t, y)))
     property("Type substitution 1") = forAll((x: String) => forAll(genTyVar, genTy)((tv: TyVar, ty: Ty) => Var(x, ty) == tySubst(Var(x, tv), ty, tv)))
     property("Type substitution 2") = forAll((x: String) =>
-        forAll(genTyVar, genTyVar, genTy)((tv1: TyVar, tv2: TyVar, ty: Ty) => {
-            (tv1 != tv2) ==>
-                (Var(x, tv1) == tySubst(Var(x, tv1), ty, tv2))
-        })
+        forAll(genTyVar, genTyVar, genTy)((tv1: TyVar, tv2: TyVar, ty: Ty) => (tv1 != tv2) ==> (Var(x, tv1) == tySubst(Var(x, tv1), ty, tv2)))
     )
 
 object TaintPropTests extends Properties("TaintPropTests"):
-
     import TaintLattice._
     import MyGenerators.{genTaint}
     property("Reflexivity") = forAll(genTaint)((t: Taint) => lub(t, t) == t)
