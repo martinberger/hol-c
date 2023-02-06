@@ -5,10 +5,6 @@ case object I  extends Taint
 case object W  extends Taint
 case object C  extends Taint
 case object CH extends Taint
-// case object E   extends Taint // Not used in current version of paper
-// case object CE  extends Taint // Not used in current version of paper
-// case object CC  extends Taint // Not used in current version of paper
-// case object CCE extends Taint // Not used in current version of paper
 
 given CanEqual[Taint, Taint] = CanEqual.derived
 
