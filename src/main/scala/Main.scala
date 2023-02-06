@@ -8,10 +8,10 @@ object Main:
 
     def main(argv: Array[String]): Unit =
         import Prover._
-        var failedTests = 0
-        failedTests += eval(KindTests.run, "Kind")
-        failedTests += eval(TypeTests.run, "Type")
-        failedTests += eval(TermTests.run, "Term")
-        failedTests += eval(RuleTests.run, "Rule")
-        failedTests += eval(Prover.TacTests.run, "Tactic")
-        System.exit(failedTests)
+        var failed = 0
+        failed += eval(KindTests.run, "Kind")
+        failed += eval(TypeTests.run, "Type")
+        failed += eval(TermTests.run, "Term")
+        failed += eval(RuleTests.run, "Rule")
+        failed += eval(Prover.TacTests.run, "Tactic")
+        System.exit(failed)
