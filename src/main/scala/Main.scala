@@ -6,12 +6,15 @@ object Main:
         println(s"Passed ${all - failed} out of ${all} tests")
         failed
 
+    import Prover._
+    val all = List(
+      (KindTests.run _, "Kind"),
+      (TypeTests.run _, "Type"),
+      (TermTests.run _, "Term"),
+      (RuleTests.run _, "Rule"),
+      (TacTests.run _, "Tactic")
+    )
+
     def main(argv: Array[String]): Unit =
-        import Prover._
-        var failed = 0
-        failed += eval(KindTests.run, "Kind")
-        failed += eval(TypeTests.run, "Type")
-        failed += eval(TermTests.run, "Term")
-        failed += eval(RuleTests.run, "Rule")
-        failed += eval(Prover.TacTests.run, "Tactic")
+        val failed = all.foldLeft(0)((accu, t) => accu + eval(t._1, t._2))
         System.exit(failed)
