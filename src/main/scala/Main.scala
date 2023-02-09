@@ -1,13 +1,16 @@
 object Main:
 
-    def eval(runner: () => (Int, Int), name: String): Int =
-        println(s"\n----------- ${name} Tests -----------")
-        val (all, failed) = runner()
-        println(s"Passed ${all - failed} out of ${all} tests")
-        failed
+    type Runner = (() => (Int, Int))
+    def run(tests: List[(Runner, String)]): Int =
+        def eval(runner: Runner, name: String): Int =
+            println(s"\n----------- ${name} Tests -----------")
+            val (all, failed) = runner()
+            println(s"Passed ${all - failed} out of ${all} tests")
+            failed
+        tests.foldLeft(0)((accu, t) => accu + eval(t._1, t._2))
 
     import Prover._
-    val all = List(
+    val allTests = List(
       (KindTests.run _, "Kind"),
       (TypeTests.run _, "Type"),
       (TermTests.run _, "Term"),
@@ -16,5 +19,5 @@ object Main:
     )
 
     def main(argv: Array[String]): Unit =
-        val failed = all.foldLeft(0)((accu, t) => accu + eval(t._1, t._2))
+        val failed = run(allTests)
         System.exit(failed)
