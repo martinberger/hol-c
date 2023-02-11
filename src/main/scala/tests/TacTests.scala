@@ -459,7 +459,7 @@ object TacTests:
       Init_pretac()
     )
     val neg_x_iff_neg_neg_neg_x = Equivalence(neg_x, neg_neg_neg_x)
-    val t35                     = TestCase("!x <-> !!!x", context0, neg_x_iff_neg_neg_neg_x, I, makeGeneric(tac_35, true))
+    val t35                     = TestCase("!x <-> !!!x", context0, neg_x_iff_neg_neg_neg_x, I, makeGeneric(tac_35))
 
     val testsWithQED = List(
       ("t3", t3),
