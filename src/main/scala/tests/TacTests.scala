@@ -168,8 +168,6 @@ object TacTests:
     val neg_b_implies_neg_a = Implies(neg_b, neg_a)
     val contraposition      = Implies(a_implies_b, neg_b_implies_neg_a)
 
-// (=, m), m), (not, ((=, x), y)), ((implies, ((=, m), m)), ((=, x), y))) |- ((implies, ((=, m), m)), ((=, x), y)) : I
-
     val gamma14 = List(a, neg_b, a_implies_b)
     val t14     = TestCase("A, !B, A -> B |- A -> B", gamma14, a_implies_b, I, List(Apply(Init_pretac())))
     val t15     = TestCase("A, !B, A -> B |- A", gamma14, a, I, List(Apply(Init_pretac())))
@@ -512,13 +510,11 @@ object TacTests:
       ("t34", t34),
       ("t35", t35)
     )
-    val allTests = /*testsNoQED ++ */ testsWithQED
+
 
     def run(): (Int, Int) =
         var n      = 0
         var failed = 0
-        // import TacticsTests.{allTests, testsWithQED}
-        // allTests.map(_.runGenericNoQED())
         testsWithQED.foreach(t =>
             val (name, test) = t
             n += 1
