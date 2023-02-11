@@ -51,6 +51,7 @@ object PreTactic:
     // type PreTactic = Goal => Option[PreGoals]
 
     def apply(pretac: PreTactic): Goal => Option[PreGoals] =
+        // println(s" -----------> about to run ${pretac}")
         pretac match
             case Init_pretac() =>
                 (goal: Goal) =>

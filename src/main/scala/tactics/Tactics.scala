@@ -10,7 +10,6 @@ case class OrElse(fst: Tactic, snd: Tactic)  extends Tactic
 case class Repeat(tac: Tactic)               extends Tactic
 case class Select(subgoals: List[String])    extends Tactic
 case class PrintState()                      extends Tactic
-case class SelectLast()                      extends Tactic // NOTE: could be unified with Select(l) above
 
 object Tactic:
     def AndThenList(l: List[Tactic]): Tactic =
@@ -20,5 +19,4 @@ object Tactic:
 
     def makeGeneric(l: List[PreTactic], printState: Boolean = false): List[Tactic] =
         val l1 = l.map(Apply(_))
-        val l2 = Lib.sandwich(SelectLast())(l1)
-        if printState then Lib.saturate(PrintState())(l2) else l2
+        if printState then Lib.saturate(PrintState())(l1) else l1

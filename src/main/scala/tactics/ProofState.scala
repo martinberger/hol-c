@@ -46,7 +46,7 @@ object ProofState:
         Lib.reset() // Needed because we don't have a fully functional architecture.
         val holeID            = Lib.gensym()
         val justificationTree = Hole[Goal, Thm](holeID)
-        ProofState(Map(holeID -> GoalContext(goal, name)), justificationTree, List())
+        ProofState(Map(holeID -> GoalContext(goal, name)), justificationTree, List(holeID))
 
     def mkFresh(goal: Goal): ProofState =
         mkFreshNamed(goal, s"goal_{ Lib.gensym() }")
@@ -72,8 +72,12 @@ object ProofState:
                         assert(rest.size < 1) // NOTE: this is not true in general, but true for all tactics currently implemented.
                         val selectedGoalContext = proofState.subgoals(holeID)
                         PreTactic.apply(preTac)(selectedGoalContext.goal) match
-                            case None           => None
-                            case Some(preGoals) => Some(insert(proofState)(holeID, preGoals))
+                            case None => None
+                            case Some(preGoals) =>
+                                val newPS        = insert(proofState)(holeID, preGoals)
+                                val hids         = newPS.subgoals.keySet
+                                val nextSelected = if hids.isEmpty then List() else List(hids.max)
+                                Some(ProofState(newPS.subgoals, newPS.justificationTree, nextSelected))
             case AndThen(fst, snd) =>
                 for (
                   tmp <- act(proofState)(fst);
@@ -92,16 +96,13 @@ object ProofState:
                 act(proofState)(fst) match
                     case None              => act(proofState)(snd)
                     case success @ Some(_) => success
-            case Repeat(tac) => Lib.fail("ProofState.scala")("Repeat tactic not implemented: not useful with current proof system")
-            case Select(selectedSubgoals) => // NOTE: invalid names are simply not selected.
+            case Repeat(tac)              => Lib.fail("ProofState.scala")("Repeat tactic not implemented: not useful with current proof system")
+            case Select(selectedSubgoals) =>
+                // NOTE: invalid names are simply not selected.
+                // NOTE: this will throw away what is currently selected
                 val selectedHoleID = selectedSubgoals.map(nameToHoleID(proofState)).flatten
                 val newSelection   = selectedSubgoals :: (proofState.selected.filter(i => !selectedSubgoals.contains(i)))
                 Some(ProofState(proofState.subgoals, proofState.justificationTree, selectedHoleID))
-            case SelectLast() => // NOTE: Experimental, if it works can be unified with Select(l) above
-                val hids = proofState.subgoals.keySet
-                if hids.isEmpty then return None // NOTE: very strict for this experiment. We may also return old proof state
-                Some(ProofState(proofState.subgoals, proofState.justificationTree, List(hids.max)))
-            // NOTE: SelectLast requires that goal names be monotonically increasing to work!
             case PrintState() =>
                 println(proofState)
                 Some(proofState)

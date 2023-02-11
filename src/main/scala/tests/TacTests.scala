@@ -24,17 +24,6 @@ class TestCase(
         tactic = $tactic
     """
 
-    type Handler = (TestCase, Option[ProofState]) => Unit
-    def id: Handler        = { (_, _) => () }
-    def printFail: Handler = { (_, res) => if res == None then println(s"FAIL ${this}") }
-    def runGenericNoQED(resultHandler: Handler = printFail): Option[ProofState] =
-        val goal    = (ctx, goalTm, taint)
-        val initial = "my_goal"
-        val ps      = mkFreshNamed(goal, initial)
-        val res     = act(ps)(tactic)
-        resultHandler(this, res)
-        res
-
     type QEDHandler = (TestCase, Option[Thm]) => Boolean
     def idQED: QEDHandler        = { (_, _) => true }
     def printFailQED: QEDHandler = { (_, res) => res != None }
@@ -43,8 +32,7 @@ class TestCase(
         val initial = "my_goal"
         val ps      = mkFreshNamed(goal, initial)
         val res = for (
-          res0 <- act(ps)(Select(List(initial)));
-          res1 <- act(res0)(tactic);
+          res1 <- act(ps)(tactic);
           res2 <- qed(res1)
         ) yield res2
         resultHandler(this, res)
@@ -61,15 +49,13 @@ object TacTests:
     val t1                = TestCase("test1", context0, eq_x_x, I, Id())
     val t2                = TestCase("test2", context0, eq_x_x, I, printState)
 
-    def select(i: Int): Tactic = Select(List(s"goal_${i.toString}"))
-
     val t3 = TestCase("eq_x_x", context0, eq_x_x, I, Apply(Refl_pretac()))
     val t4 = TestCase("eq_x_y |- eq_x_y", context2, eq_x_y, I, Apply(Init_pretac()))
 
-    val tac5 = List(Apply(Sym_pretac()), select(1), Apply(Init_pretac()))
+    val tac5 = List(Apply(Sym_pretac()), Apply(Init_pretac()))
     val t5   = TestCase("eq_x_y |- eq_y_x", context2, eq_y_x, I, AndThenList(tac5))
 
-    val tac6 = List(Apply(Trans_pretac(y)), select(1), Apply(Init_pretac()), select(2), Apply(Init_pretac()))
+    val tac6 = List(Apply(Trans_pretac(y)), Apply(Init_pretac()), Apply(Init_pretac()))
     val t6   = TestCase("eq_x_y, eq_y_z |- eq_x_z", context3, eq_x_z, I, tac6)
 
     val tac_trueI = List(Lift_pretac(I), TrueI_pretac())
@@ -85,15 +71,10 @@ object TacTests:
 
     val tac7 = List(
       Apply(ImpI_pretac()),
-      select(1),
       Apply(ConjI_pretac()),
-      select(2),
-      Apply(ConjE2_pretac(eq_m_m)),
-      select(4),
-      Apply(Init_pretac()),
-      select(3),
       Apply(ConjE1_pretac(eq_x_y)),
-      select(5),
+      Apply(Init_pretac()),
+      Apply(ConjE2_pretac(eq_m_m)),
       Apply(Init_pretac())
     )
     val t7 = TestCase("(A && B) -> (B && A)", gamma_empty, a_and_b_implies_b_and_a, I, tac7)
@@ -104,20 +85,15 @@ object TacTests:
     val goal                        = (gamma_empty, a_and_a_implies_b_implies_b, I)
     val tac8 = List(
       Apply(ImpI_pretac()),
-      select(1),
       Apply(ImpE_pretac(a)),
-      select(2),
-      Apply(ConjE2_pretac(a)),
-      select(4),
-      Apply(Init_pretac()),
-      select(3),
       Apply(ConjE1_pretac(a_implies_b)),
-      select(5),
+      Apply(Init_pretac()),
+      Apply(ConjE2_pretac(a)),
       Apply(Init_pretac())
     )
     val t8 = TestCase("A && (A -> B)) -> B", gamma_empty, a_and_a_implies_b_implies_b, I, tac8)
 
-    val tac9 = List(Apply(Lift_pretac(I)), select(1), Apply(Init_pretac()))
+    val tac9 = List(Apply(Lift_pretac(I)), Apply(Init_pretac()))
     val t9   = TestCase("trivial use of lifting", context3, eq_x_y, C, tac9)
 
     val neg_a               = Neg(a)
@@ -125,13 +101,9 @@ object TacTests:
     val neg_neg_a_implies_a = Implies(neg_neg_a, a)
     val tac10 = List(
       Apply(ImpI_pretac()),
-      select(1),
       Apply(Raa_pretac(I)),
-      select(2),
       Apply(NegE_pretac(neg_a)),
-      select(3),
       Apply(Init_pretac()),
-      select(4),
       Apply(Init_pretac())
     )
     val t10 = TestCase("Double negation (1): !!A -> A : C", gamma_empty, neg_neg_a_implies_a, C, tac10)
@@ -139,13 +111,9 @@ object TacTests:
     val a_implies_neg_neg_a = Implies(a, neg_neg_a)
     val tac11 = List(
       Apply(ImpI_pretac()),
-      select(1),
       Apply(NegI_pretac()),
-      select(2),
       Apply(NegE_pretac(a)),
-      select(3),
       Apply(Init_pretac()),
-      select(4),
       Apply(Init_pretac())
     )
     val t11 = TestCase("Double negation (2): A -> !!A : I", gamma_empty, a_implies_neg_neg_a, I, tac11)
@@ -205,14 +173,12 @@ object TacTests:
     val gamma14 = List(a, neg_b, a_implies_b)
     val t14     = TestCase("A, !B, A -> B |- A -> B", gamma14, a_implies_b, I, List(Apply(Init_pretac())))
     val t15     = TestCase("A, !B, A -> B |- A", gamma14, a, I, List(Apply(Init_pretac())))
-    val tac16 = Lib.sandwich(SelectLast())(
-      List(
-        ImpE_pretac(a),
-        Init_pretac(),
-        Init_pretac()
-      ).map(Apply(_))
+    val tac16 = List(
+      ImpE_pretac(a),
+      Init_pretac(),
+      Init_pretac()
     )
-    val t16 = TestCase("A, !B, A -> B |- B", gamma14, b, I, tac16)
+    val t16 = TestCase("A, !B, A -> B |- B", gamma14, b, I, makeGeneric(tac16))
     val t17 = TestCase("A, !B, A -> B |- !B", gamma14, neg_b, I, List(Apply(Init_pretac())))
 
     val tac18 =
@@ -226,20 +192,18 @@ object TacTests:
 
     val t18 = TestCase("A, !B, A -> B |- FALSE", gamma14, FalseProp(), I, makeGeneric(tac18))
 
-    val tac_contraposition = Lib.sandwich(SelectLast())(
-      List(
-        ImpI_pretac(),
-        ImpI_pretac(),
-        NegI_pretac(),
-        NegE_pretac(b),
-        Init_pretac(),
-        ImpE_pretac(a),
-        Init_pretac(),
-        Init_pretac()
-      ).map(Apply(_))
+    val tac_contraposition = List(
+      ImpI_pretac(),
+      ImpI_pretac(),
+      NegI_pretac(),
+      NegE_pretac(b),
+      Init_pretac(),
+      ImpE_pretac(a),
+      Init_pretac(),
+      Init_pretac()
     )
 
-    val t_contraposition = TestCase("(A -> B) -> !A -> !B", gamma_empty, contraposition, I, tac_contraposition)
+    val t_contraposition = TestCase("(A -> B) -> !A -> !B", gamma_empty, contraposition, I, makeGeneric(tac_contraposition))
 
     val ex_falso_quodlibet   = Implies(neg_a, Implies(a, b))
     val tac_ex_falso         = List(ImpI_pretac(), ImpI_pretac(), Raa_pretac(I), NegE_pretac(a), Init_pretac(), Init_pretac())
