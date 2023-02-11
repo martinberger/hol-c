@@ -417,6 +417,50 @@ object TacTests:
     val gamma32 = List(tm32)
     val t32     = TestCase("ExE", gamma32, eq32, I, makeGeneric(tac_32))
 
+    val neg_neg_x                   = Neg(neg_x)
+    val neg_neg_neg_x               = Neg(neg_neg_x)
+    val neg_neg_neg_x_implies_neg_x = Implies(neg_neg_neg_x, neg_x)
+
+    val tac_33 = List(
+      ImpI_pretac(),
+      NegI_pretac(),
+      NegE_pretac(neg_neg_x),
+      Init_pretac(),
+      NegI_pretac(),
+      NegE_pretac(x),
+      Init_pretac(),
+      Init_pretac()
+    )
+
+    val t33 = TestCase("!!!x -> !x", context0, neg_neg_neg_x_implies_neg_x, I, makeGeneric(tac_33))
+
+    val tac_34 = List(
+      ImpI_pretac(),
+      NegI_pretac(),
+      NegE_pretac(neg_x),
+      Init_pretac(),
+      Init_pretac()
+    )
+    val neg_x_implies_neg_neg_neg_x = Implies(neg_x, neg_neg_neg_x)
+    val t34                         = TestCase("!x -> !!!x", context0, neg_x_implies_neg_neg_neg_x, I, makeGeneric(tac_34))
+
+    val tac_35 = List(
+      IffI_pretac(),
+      NegI_pretac(),
+      NegE_pretac(neg_x),
+      Init_pretac(),
+      Init_pretac(),
+      NegI_pretac(),
+      NegE_pretac(neg_neg_x),
+      Init_pretac(),
+      NegI_pretac(),
+      NegE_pretac(x),
+      Init_pretac(),
+      Init_pretac()
+    )
+    val neg_x_iff_neg_neg_neg_x = Equivalence(neg_x, neg_neg_neg_x)
+    val t35                     = TestCase("!x <-> !!!x", context0, neg_x_iff_neg_neg_neg_x, I, makeGeneric(tac_35))
+
     val testsWithQED = List(
       ("t3", t3),
       ("t4", t4),
@@ -463,7 +507,10 @@ object TacTests:
       ("t29", t29),
       ("t30", t30),
       ("t31", t31),
-      ("t32", t32)
+      ("t32", t32),
+      ("t33", t33),
+      ("t34", t34),
+      ("t35", t35)
     )
     val allTests = /*testsNoQED ++ */ testsWithQED
 
