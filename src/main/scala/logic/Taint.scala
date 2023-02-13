@@ -19,8 +19,8 @@ given CanEqual[Taint, Taint] = CanEqual.derived
 //    I
 //
 //  Note that taint in general is not a linear order.  The 4 taints we
-//  use in the paper accompanying this implementation just happens to
-//  be linear.
+//  use in the paper accompanying this implementation just happen to
+//  be mutually comparable, hence the resulting order is linear.
 
 object TaintLattice extends JoinSemilattice:
     type T = Taint
