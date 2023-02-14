@@ -85,9 +85,10 @@ object ProofState:
                 ) yield res
             case Id() => Some(proofState)
             case FailWith(msg) => println(msg); None
-            // NOTE: passing on error message.
+            // NOTE: passing on error message in a more principled way
             // requires replacing Option[ProofState] with something
             // more sophisticated like Either[String, ProofState]
+            // See Github Issue https://github.com/martinberger/hol-c/issues/4
             case Try(tac) =>
                 act(proofState)(tac) match
                     case res @ Some(_) => res
