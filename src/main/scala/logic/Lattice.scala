@@ -3,7 +3,7 @@ package Prover
 trait JoinSemilattice:
 
     type T
-    val top: T
+    val bot: T
     def eq(t1: T, t2: T): Boolean
     def lub(t1: T, t2: T): T
 
