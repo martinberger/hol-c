@@ -38,7 +38,7 @@ case class ExE_pretac(phi: Term, x: Var, y: Var)                      extends Pr
 case class Lem_pretac()                                               extends PreTactic
 case class Raa_pretac(taint: Taint)                                   extends PreTactic
 case class WeakLem_pretac()                                           extends PreTactic
-// case class axiomOfChoice()                                            extends PreTactic
+case class axiomOfChoice_pretac()                                     extends PreTactic
 
 // ------------ Derived ------------
 
@@ -478,24 +478,28 @@ object PreTactic:
                             Some(List(), justification)
                         case _ => None
 
-            // case axiomOfChoice() =>
-            //     (goal) =>
-            //         goal match
-            //             case (
-            //                   gamma,
-            //                   Implies(
-            //                     Forall(x1, x1_ty, Exists(y1, y1_ty, App(App(p1, x2), y2))),
-            //                     Exists(f1, f1_ty, Forall(x3, x3_ty, App(App(p2, x4), App(f2, x5))))
-            //                   ),
-            //                   CH
-            //                 )
-            //                 if Var(x1, x1_ty) == x2 && x2 == Var(x3, x3_ty) && x2 == x4 && x4 == x5 &&
-            //                     Var(y1, y1_ty) == y2 &&
-            //                     Var(f1, f1_ty) == f2 &&
-            //                     p1 == p2 =>
-            //                 def justification(ts: List[Thm]): Option[Thm] =
-            //                     ts match
-            //                         case List() => axiomOfChoice(gamma, tm1)
-            //                         case _      => None
-            //                 Some(List(), justification)
-            //             case _ => None
+            case axiomOfChoice_pretac() => // The branching structure below is uncomfortably complex!
+                (goal) =>
+                    goal match
+                        case (
+                              gamma,
+                              Implies(
+                                Forall(x1, x1_ty, Exists(y1, y1_ty, App(App(p1, x2), y2))),
+                                Exists(f1, f1_ty, Forall(x3, x3_ty, App(App(p2, x4), App(f2, x5))))
+                              ),
+                              CH
+                            )
+                            if Var(x1, x1_ty) == x2 && x2 == Var(x3, x3_ty) && x2 == x4 && x4 == x5 &&
+                                Var(y1, y1_ty) == y2 &&
+                                Var(f1, f1_ty) == f2 &&
+                                p1 == p2 &&
+                                Term.check(goal._2, Prop()) =>
+                            (x2, x1_ty, y2, y1_ty, f2) match
+                                case (x @ Var(_, _), alpha @ TyVar(_), y @ Var(_, _), beta @ TyVar(_), f @ Var(_, _)) =>
+                                    def justification(ts: List[Thm]): Option[Thm] =
+                                        ts match
+                                            case List() => axiomOfChoice(gamma, p1, alpha, beta, x, y, f)
+                                            case _      => None
+                                    Some(List(), justification)
+                                case _ => None
+                        case _ => None

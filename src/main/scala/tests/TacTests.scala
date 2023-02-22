@@ -463,6 +463,18 @@ object TacTests:
     val tac_36             = List(WeakLem_pretac())
     val t36                = TestCase("!x or !!x, aka weak LEM", context0, neg_x_or_neg_neg_x, W, makeGeneric(tac_36))
 
+    val alpha  = TyVar("alpha")
+    val beta   = TyVar("beta")
+    val x37    = Var("x", alpha)
+    val y37    = Var("y", beta)
+    val f37    = Var("f", FunctionTy(alpha, beta))
+    val p37    = Var("p", BinaryPredicateTy(alpha, beta))
+    val tm37_l = Forall(x37.name, x37.ty, Exists(y37.name, y37.ty, App(App(p37, x37), y37)))
+    val tm37_r = Exists(f37.name, f37.ty, Forall(x37.name, x37.ty, App(App(p37, x37), App(f37, x37))))
+    val tm37   = Implies(tm37_l, tm37_r)
+    val tac_37 = List(axiomOfChoice_pretac())
+    val t37    = TestCase("AxiomOfChoice", context0, tm37, CH, makeGeneric(tac_37))
+
     val testsWithQED = List(
       ("t3", t3),
       ("t4", t4),
@@ -513,7 +525,8 @@ object TacTests:
       ("t33", t33),
       ("t34", t34),
       ("t35", t35),
-      ("t36", t36)
+      ("t36", t36),
+      ("t37", t37)
     )
 
     def run(): (Int, Int) =
