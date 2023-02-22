@@ -37,6 +37,7 @@ case class ExI_pretac(r: Term)                                        extends Pr
 case class ExE_pretac(phi: Term, x: Var, y: Var)                      extends PreTactic
 case class Lem_pretac()                                               extends PreTactic
 case class Raa_pretac(taint: Taint)                                   extends PreTactic
+case class WeakLem_pretac()                                           extends PreTactic
 
 // ------------ Derived ------------
 
@@ -464,3 +465,14 @@ object PreTactic:
                             case List(thm) => wk(thm, tm1)
                             case _         => None
                     Some(List(subgoal), justification)
+
+            case WeakLem_pretac() =>
+                (goal) =>
+                    goal match
+                        case (gamma, Or(Neg(tm1), Neg(Neg(tm2))), W) if tm1 == tm2 && valid(gamma) && Term.check(tm1, Prop()) =>
+                            def justification(ts: List[Thm]): Option[Thm] =
+                                ts match
+                                    case List() => weakLem(gamma, tm1)
+                                    case _      => None
+                            Some(List(), justification)
+                        case _ => None

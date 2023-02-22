@@ -459,6 +459,10 @@ object TacTests:
     val neg_x_iff_neg_neg_neg_x = Equivalence(neg_x, neg_neg_neg_x)
     val t35                     = TestCase("!x <-> !!!x", context0, neg_x_iff_neg_neg_neg_x, I, makeGeneric(tac_35))
 
+    val neg_x_or_neg_neg_x = Or(neg_x, neg_neg_x)
+    val tac_36             = List(WeakLem_pretac())
+    val t36                = TestCase("!x or !!x, aka weak LEM", context0, neg_x_or_neg_neg_x, W, makeGeneric(tac_36))
+
     val testsWithQED = List(
       ("t3", t3),
       ("t4", t4),
@@ -508,9 +512,9 @@ object TacTests:
       ("t32", t32),
       ("t33", t33),
       ("t34", t34),
-      ("t35", t35)
+      ("t35", t35),
+      ("t36", t36)
     )
-
 
     def run(): (Int, Int) =
         var n      = 0

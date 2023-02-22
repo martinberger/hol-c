@@ -232,4 +232,8 @@ object Thm:
         if !valid(gamma2) then return None
         Some(Thm(gamma2, tm1, taint))
 
+    def weakLem(gamma: Context, tm: Term): Option[Thm] =
+        if !valid(gamma) || !check(tm, Prop()) then return None
+        Some(Thm(gamma, Or(Neg(tm), Neg(Neg(tm))), W))
+
     def show(thm: Thm): (Context, Term, Taint) = (thm.ctx, thm.tm, thm.t)
