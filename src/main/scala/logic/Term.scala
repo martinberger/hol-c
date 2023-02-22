@@ -94,8 +94,11 @@ object IfThenElseConst:
             case _                                     => None
 
 object IfThenElse:
-    def apply(tv: TyVar, cond: Term, thn: Term, els: Term): Term = ???
-    def unapply(tm: Term): Option[TyVar]                         = ???
+    def apply(tv: TyVar, cond: Term, thn: Term, els: Term): Term = App(App(App(IfThenElseConst(tv), cond), thn), els)
+    def unapply(tm: Term): Option[(TyVar, Term, Term, Term)] =
+        tm match
+            case App(App(App(IfThenElseConst(tv), cond), thn), els) => Some((tv, cond, thn, els))
+            case _                                                  => None
 
 object UnaryPredicate:
     def apply(pred: Term, arg: Term): Term = App(pred, arg)
