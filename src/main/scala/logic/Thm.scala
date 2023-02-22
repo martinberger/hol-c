@@ -236,4 +236,21 @@ object Thm:
         if !valid(gamma) || !check(tm, Prop()) then return None
         Some(Thm(gamma, Or(Neg(tm), Neg(Neg(tm))), W))
 
+    // def axiomOfChoice(
+    //     gamma: Context,
+    //     p: Term,
+    //     alpha: TyVar,
+    //     beta: TyVar,
+    //     x: Var,
+    //     y: Var,
+    //     f: Var
+    // ): Option[Thm] =
+    //     val targetTy = FunctionTy(alpha, FunctionTy(beta, Prop()))
+    //     if !valid(gamma) || !check(p, targetTy) then return None
+    //     val tm1 = Forall(x.name, x.ty, Exists(y.name, y.ty, App(App(p, x), y)))
+    //     val tm2 = Exists(f.name, f.ty, Forall(x.name, x.ty, App(App(p, x), App(f, x))))
+    //     val tm  = Implies(tm1, tm2)
+    //     if !check(tm, Prop()) then return None
+    //     Some(Thm(gamma, tm, CH))
+
     def show(thm: Thm): (Context, Term, Taint) = (thm.ctx, thm.tm, thm.t)
