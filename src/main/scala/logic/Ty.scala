@@ -107,8 +107,8 @@ object TernaryFunctionTy:
             case _                                                      => None
 
 object IfThenElseTy:
-    def apply(tv: TyVar): Ty = TernaryFunctionTy(Bool(), tv, tv, tv)
-    def unapply(ty: Ty): Option[TyVar] =
+    def apply(ty: Ty): Ty = TernaryFunctionTy(Bool(), ty, ty, ty)
+    def unapply(ty: Ty): Option[Ty] =
         ty match
-            case TernaryFunctionTy(Bool(), tv @ TyVar(tv1), TyVar(tv2), TyVar(tv3)) if tv1 == tv2 && tv2 == tv3 => Some(tv)
-            case _                                                                                              => None
+            case TernaryFunctionTy(Bool(), ty1, ty2, ty3) if ty1 == ty2 && ty2 == ty3 => Some(ty1)
+            case _                                                                    => None

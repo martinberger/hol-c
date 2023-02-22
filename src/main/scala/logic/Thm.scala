@@ -2,7 +2,8 @@ package Prover
 
 import Context.{Context, valid, remove, fv, tySubst}
 import TaintLattice.{leq}
-import Term.{check}
+import Term.{check, tyInference}
+import Lib.{freshVar}
 
 case class Thm private (ctx: Context, tm: Term, t: Taint)
 
@@ -252,5 +253,19 @@ object Thm:
         val tm  = Implies(tm1, tm2)
         if !check(tm, Prop()) then return None
         Some(Thm(gamma, tm, CH))
+
+    def ifThenElseTrueI(gamma: Context, ty: Ty): Option[Thm] =
+        if !valid(gamma) then return None
+        val (x, y) = (freshVar(Set(), ty), freshVar(Set(), ty))
+        val the    = Lam(x, Lam(y, x))
+        val ty2    = FunctionTy(ty, FunctionTy(ty, ty))
+        Some(Thm(gamma, Equation(App(IfThenElseConst(ty), TrueBool()), the, ty2), I))
+
+    def ifThenElseFalseI(gamma: Context, ty: Ty): Option[Thm] =
+        if !valid(gamma) then return None
+        val (x, y) = (freshVar(Set(), ty), freshVar(Set(), ty))
+        val els    = Lam(x, Lam(y, y))
+        val ty2    = FunctionTy(ty, FunctionTy(ty, ty))
+        Some(Thm(gamma, Equation(App(IfThenElseConst(ty), TrueBool()), els, ty2), I))
 
     def show(thm: Thm): (Context, Term, Taint) = (thm.ctx, thm.tm, thm.t)

@@ -39,6 +39,7 @@ case class Lem_pretac()                                               extends Pr
 case class Raa_pretac(taint: Taint)                                   extends PreTactic
 case class WeakLem_pretac()                                           extends PreTactic
 case class axiomOfChoice_pretac()                                     extends PreTactic
+case class iteTrue()                                                  extends PreTactic
 
 // ------------ Derived ------------
 
@@ -503,3 +504,16 @@ object PreTactic:
                                     Some(List(), justification)
                                 case _ => None
                         case _ => None
+
+            case iteTrue() => ???
+            // (goal) =>
+            //     goal match
+            //         case (gamma, Equation(IfThenElse(ty1, cond, thn, els), rhs, ty2), taint) if ty1 == ty2 =>
+            //             val subgoal1 = (gamma, Equation(cond, TrueBool(), Bool()), taint)
+            //             val subgoal2 = (gamma, Equation(thn, rhs, ty2), taint)
+            //             def justification(ts: List[Thm]): Option[Thm] =
+            //                 ts match
+            //                     case List(thm1, thm2) =>
+            //                     case _                => None
+            //             Some(List(subgoal1, subgoal2), justification)
+            //         case _ => None

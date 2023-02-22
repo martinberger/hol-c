@@ -87,17 +87,17 @@ object FalseBool:
             case _                          => false
 
 object IfThenElseConst:
-    def apply(tv: TyVar): Term = Const("IfThenElse", IfThenElseTy(tv))
-    def unapply(tm: Term): Option[TyVar] =
+    def apply(ty: Ty): Term = Const("IfThenElse", IfThenElseTy(ty))
+    def unapply(tm: Term): Option[Ty] =
         tm match
-            case Const("IfThenElse", IfThenElseTy(tv)) => Some(tv)
+            case Const("IfThenElse", IfThenElseTy(ty)) => Some(ty)
             case _                                     => None
 
 object IfThenElse:
-    def apply(tv: TyVar, cond: Term, thn: Term, els: Term): Term = App(App(App(IfThenElseConst(tv), cond), thn), els)
-    def unapply(tm: Term): Option[(TyVar, Term, Term, Term)] =
+    def apply(ty: Ty, cond: Term, thn: Term, els: Term): Term = App(App(App(IfThenElseConst(ty), cond), thn), els)
+    def unapply(tm: Term): Option[(Ty, Term, Term, Term)] =
         tm match
-            case App(App(App(IfThenElseConst(tv), cond), thn), els) => Some((tv, cond, thn, els))
+            case App(App(App(IfThenElseConst(ty), cond), thn), els) => Some((ty, cond, thn, els))
             case _                                                  => None
 
 object UnaryPredicate:
