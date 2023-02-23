@@ -510,7 +510,7 @@ object TacTests:
       Init_pretac(),
       Refl_pretac()
     )
-    val t41 = TestCase("NTrans_pretac with 2-split list", context4, eq_x_b, I, makeGeneric(tac_41, true))
+    val t41 = TestCase("NTrans_pretac with 2-split list", context4, eq_x_b, I, makeGeneric(tac_41))
 
     val testsWithQED = List(
       ("t3", t3),
