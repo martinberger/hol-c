@@ -25,9 +25,10 @@ class TestCase(
     """
 
     type QEDHandler = (TestCase, Option[Thm]) => Boolean
-    def idQED: QEDHandler        = { (_, _) => true }
-    def printFailQED: QEDHandler = { (_, res) => res != None }
-    def runGeneric(resultHandler: QEDHandler = printFailQED): Boolean =
+
+    def toBoolQED: QEDHandler = { (_, res) => res != None }
+
+    def runGeneric(resultHandler: QEDHandler = toBoolQED): Boolean =
         val goal    = (ctx, goalTm, taint)
         val initial = "my_goal"
         val ps      = mkFreshNamed(goal, initial)

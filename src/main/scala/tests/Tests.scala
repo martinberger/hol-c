@@ -3,6 +3,7 @@ package Prover
 object Tests:
 
     type Runner = (() => (Int, Int))
+
     def run(tests: List[(Runner, String)]): Int =
         def eval(runner: Runner, name: String): Int =
             println(s"\n----------- ${name} Tests -----------")
