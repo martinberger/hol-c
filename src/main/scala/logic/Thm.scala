@@ -266,6 +266,6 @@ object Thm:
         val (x, y) = (freshVar(Set(), ty), freshVar(Set(), ty))
         val els    = Lam(x, Lam(y, y))
         val ty2    = FunctionTy(ty, FunctionTy(ty, ty))
-        Some(Thm(gamma, Equation(App(IfThenElseConst(ty), TrueBool()), els, ty2), I))
+        Some(Thm(gamma, Equation(App(IfThenElseConst(ty), FalseBool()), els, ty2), I))
 
     def show(thm: Thm): (Context, Term, Taint) = (thm.ctx, thm.tm, thm.t)
