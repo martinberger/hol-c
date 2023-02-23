@@ -476,6 +476,42 @@ object TacTests:
     val tac_37 = List(axiomOfChoice_pretac())
     val t37    = TestCase("AxiomOfChoice", context0, tm37, CH, makeGeneric(tac_37))
 
+    val tac_38 = List(
+      NTrans_pretac(List(y)),
+      Init_pretac(),
+      Init_pretac()
+    )
+    val t38 = TestCase("t6 with NTrans_pretac", context3, eq_x_z, I, makeGeneric(tac_38))
+
+    val tac_39 = List(
+      NTrans_pretac(List()),
+      Init_pretac()
+    )
+    val t39 = TestCase("NTrans_pretac with empty split list", context3, eq_x_y, I, makeGeneric(tac_39))
+
+    val tac_40 = List(
+      NTrans_pretac(List(y, y)),
+      Init_pretac(),
+      Refl_pretac(),
+      Init_pretac()
+    )
+    val t40 = TestCase("NTrans_pretac with 5-split list", context3, eq_x_z, I, makeGeneric(tac_40))
+
+    val eq_z_a            = Equation(z, a, Prop())
+    val eq_a_b            = Equation(a, b, Prop())
+    val eq_x_b            = Equation(x, b, Prop())
+    val context4: Context = List(eq_x_y, eq_y_z, eq_z_a, eq_a_b)
+    val tac_41 = List(
+      NTrans_pretac(List(x, y, z, a, b)),
+      Refl_pretac(),
+      Init_pretac(),
+      Init_pretac(),
+      Init_pretac(),
+      Init_pretac(),
+      Refl_pretac()
+    )
+    val t41 = TestCase("NTrans_pretac with 2-split list", context4, eq_x_b, I, makeGeneric(tac_41, true))
+
     val testsWithQED = List(
       ("t3", t3),
       ("t4", t4),
@@ -527,7 +563,11 @@ object TacTests:
       ("t34", t34),
       ("t35", t35),
       ("t36", t36),
-      ("t37", t37)
+      ("t37", t37),
+      ("t38", t38),
+      ("t39", t39),
+      ("t40", t40),
+      ("t41", t41)
     )
 
     def run(): (Int, Int) =

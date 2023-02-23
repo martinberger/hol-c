@@ -55,3 +55,10 @@ object Lib:
 
     def saturate[A](between: A)(l: List[A]): List[A] =
         between :: (sandwich(between)(l)) ++ List(between)
+
+    def map2[A, B](l: List[A])(f: (A, A) => B): List[B] =
+        l match
+            case Nil                      => List()
+            case List(a)                  => List(f(a, a))
+            case List(a1, a2)             => List(f(a1, a2))
+            case a1 :: (rest @ (a2 :: _)) => f(a1, a2) :: (map2(rest)(f))

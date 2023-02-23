@@ -40,10 +40,8 @@ case class Raa_pretac(taint: Taint)                                   extends Pr
 case class WeakLem_pretac()                                           extends PreTactic
 case class axiomOfChoice_pretac()                                     extends PreTactic
 case class iteTrue()                                                  extends PreTactic
-
-// ------------ Derived ------------
-
-case class Weaken_pretac(tm: Term) extends PreTactic
+case class Weaken_pretac(tm: Term)                                    extends PreTactic
+case class NTrans_pretac(l: List[Term])                               extends PreTactic
 
 //case class ConjSplitLeft_pretact(l: Term, r: Term) extends PreTactic
 
@@ -54,7 +52,7 @@ object PreTactic:
     // type PreTactic = Goal => Option[PreGoals]
 
     def apply(pretac: PreTactic): Goal => Option[PreGoals] =
-        // println(s" -----------> about to run ${pretac}")
+        println(s" -----------> about to run ${pretac}")
         pretac match
             case Init_pretac() =>
                 (goal: Goal) =>
@@ -517,3 +515,16 @@ object PreTactic:
             //                     case _                => None
             //             Some(List(subgoal1, subgoal2), justification)
             //         case _ => None
+
+            case NTrans_pretac(tms: List[Term]) =>
+                (goal) =>
+                    goal match
+                        case (gamma, Equation(l, r, ty), taint) =>
+                            val candidates = (l :: tms ++ List(r))
+                            val subgoals   = Lib.map2(candidates)((tm1, tm2) => (gamma, Equation(tm1, tm2, ty), taint))
+                            def justification(ts: List[Thm]): Option[Thm] =
+                                ts match
+                                    case fst :: rest => rest.foldLeft(Some(fst): Option[Thm])((accu, thm) => accu.flatMap(trans(_, thm)))
+                                    case _           => None
+                            Some(subgoals, justification)
+                        case _ => None
