@@ -254,18 +254,18 @@ object Thm:
         if !check(tm, Prop()) then return None
         Some(Thm(gamma, tm, CH))
 
-    def ifThenElseTrueI(gamma: Context, ty: Ty): Option[Thm] =
+    def ifThenElseTrueI(gamma: Context, tm1: Term, tm2: Term): Option[Thm] =
         if !valid(gamma) then return None
-        val (x, y) = (freshVar(Set(), ty), freshVar(Set(), ty))
-        val the    = Lam(x, Lam(y, x))
-        val ty2    = FunctionTy(ty, FunctionTy(ty, ty))
-        Some(Thm(gamma, Equation(App(IfThenElseConst(ty), TrueBool()), the, ty2), I))
+        (tyInference(tm1), tyInference(tm2)) match
+            case (Some(ty1), Some(ty2)) if ty1 == ty2 =>
+                Some(Thm(gamma, Equation(IfThenElse(ty1, TrueBool(), tm1, tm2), tm1, ty1), I))
+            case _ => None
 
-    def ifThenElseFalseI(gamma: Context, ty: Ty): Option[Thm] =
+    def ifThenElseFalseI(gamma: Context, tm1: Term, tm2: Term): Option[Thm] =
         if !valid(gamma) then return None
-        val (x, y) = (freshVar(Set(), ty), freshVar(Set(), ty))
-        val els    = Lam(x, Lam(y, y))
-        val ty2    = FunctionTy(ty, FunctionTy(ty, ty))
-        Some(Thm(gamma, Equation(App(IfThenElseConst(ty), FalseBool()), els, ty2), I))
+        (tyInference(tm1), tyInference(tm2)) match
+            case (Some(ty1), Some(ty2)) if ty1 == ty2 =>
+                Some(Thm(gamma, Equation(IfThenElse(ty1, FalseBool(), tm1, tm2), tm2, ty1), I))
+            case _ => None
 
     def show(thm: Thm): (Context, Term, Taint) = (thm.ctx, thm.tm, thm.t)
