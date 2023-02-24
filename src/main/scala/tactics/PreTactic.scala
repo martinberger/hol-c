@@ -512,6 +512,10 @@ object PreTactic:
             //             def justification(ts: List[Thm]): Option[Thm] =
             //                 ts match
             //                     case List(thm1, thm2) =>
+            //                         for (
+            //                             r1 <- ifThenElseTrueI(gamma, thn, els)
+            //                             r2 <- trans(thm1, thm2)
+            //                         ) yield ()
             //                     case _                => None
             //             Some(List(subgoal1, subgoal2), justification)
             //         case _ => None
