@@ -9,7 +9,7 @@ introduced in the paper
 
 by [Dominic Mulligan](https://dominicpm.github.io/) and [Martin
 Berger](https://martinfriedrichberger.net/). The
-paper has been submitted for publication to [ITP 2023](https://mizar.uwb.edu.pl/ITP2023/) and is available at [arxiv.org/abs/2302.10137](https://arxiv.org/abs/2302.10137).
+paper is available at [arxiv.org/abs/2302.10137](https://arxiv.org/abs/2302.10137).
 
 HOL(C) is a natural deduction presentation of HOL, but with a ternary
 judgement $\Gamma \vdash \phi : l$, adding a notion of *taint* $l$ to
