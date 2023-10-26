@@ -15,7 +15,7 @@ class ProofState(
     override def toString(): String = s"""
         +++++++++++++++++++++++++++++
         subgoals = \n${ProofState.subgoalToString(subgoals)}
-        selected = ${selected} (as names: ${ProofState.selectedGoalNames(this)})    
+        selected = ${selected} (as names: ${ProofState.selectedGoalNames(this)})
         all holeIDs = ${subgoals.keySet}
         +++++++++++++++++++++++++++++
     """

@@ -5,7 +5,7 @@
 an LCF-style interactive theorem prover for the HOL(C) logic
 introduced in the paper
 
->   *A modest proposal: explicit support for foundational pluralism*  
+>   *A modest proposal: explicit support for foundational pluralism*
 
 by [Dominic Mulligan](https://dominicpm.github.io/) and [Martin
 Berger](https://martinfriedrichberger.net/). The
