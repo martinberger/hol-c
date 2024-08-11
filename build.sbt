@@ -12,7 +12,7 @@ lazy val root = project
 //    url   := url("https://github.com/martinberger"),
       description  := "TBC",
       version      := "TBC",
-      scalaVersion := "3.4.0"
+      scalaVersion := "3.4.2"
     )
 
 scalacOptions ++= Seq(
@@ -31,10 +31,10 @@ scalacOptions ++= Seq(
   "-source:3.0"
 )
 
-lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.15.3"
+lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.15.4"
 //libraryDependencies += scalacheck % Test
 
 libraryDependencies ++= Seq(
   scalacheck       % "test",
-  "org.scalatest" %% "scalatest" % "3.2.14" % Test
+  "org.scalatest" %% "scalatest" % "3.2.19" % Test
 )
