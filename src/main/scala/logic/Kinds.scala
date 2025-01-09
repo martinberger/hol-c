@@ -1,10 +1,8 @@
 package Prover
 
-sealed trait Kind
+sealed trait Kind derives CanEqual
 case object TyKind                  extends Kind
 case class ConstructorKind(k: Kind) extends Kind
-
-given CanEqual[Kind, Kind] = CanEqual.derived
 
 object TyFunctionKind:
     def apply(): Kind = ConstructorKind(TyKind)

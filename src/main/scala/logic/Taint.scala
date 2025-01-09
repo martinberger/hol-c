@@ -1,12 +1,10 @@
 package Prover
 
-sealed trait Taint
+sealed trait Taint derives CanEqual
 case object I  extends Taint
 case object W  extends Taint
 case object C  extends Taint
 case object CH extends Taint
-
-given CanEqual[Taint, Taint] = CanEqual.derived
 
 // Taint semilattice has this order:
 //

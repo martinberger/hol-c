@@ -1,11 +1,9 @@
 package Prover
 
-sealed trait Ty
+sealed trait Ty derives CanEqual
 case class TyVar(name: String)                extends Ty { override def toString: String = s"${name}"    }
 case class TyFormer(name: String, kind: Kind) extends Ty { override def toString: String = s""           } //[${name}:${kind.toString}]" }
 case class TyApp(l: Ty, r: Ty)                extends Ty { override def toString: String = s"(${l}${r})" }
-
-given CanEqual[Ty, Ty] = CanEqual.derived
 
 object Ty:
 
