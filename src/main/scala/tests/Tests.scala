@@ -13,9 +13,9 @@ object Tests:
         tests.foldLeft(0)((accu, t) => accu + eval(t._1, t._2))
 
     val allTests = List(
-      (KindTests.run _, "Kind"),
-      (TypeTests.run _, "Type"),
-      (TermTests.run _, "Term"),
-      (RuleTests.run _, "Rule"),
-      (TacTests.run _, "Tactic")
+      (() => KindTests.run(), "Kind"),
+      (() => TypeTests.run(), "Type"),
+      (() => TermTests.run(), "Term"),
+      (() => RuleTests.run(), "Rule"),
+      (() => TacTests.run(), "Tactic")
     )

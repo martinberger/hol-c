@@ -42,7 +42,7 @@ object Lib:
 
     def sandwichMerge(between: String)(l: List[String]): String =
         def add(s1: String, s2: String): String = { s"${s1}${s2}" }
-        sandwichMerge("", add _)(between)(l)
+        sandwichMerge("", add)(between)(l)
 
     def sandwich[A](between: A)(l: List[A]): List[A] =
         import scala.annotation.tailrec
