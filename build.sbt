@@ -12,7 +12,7 @@ lazy val root = project
 //    url   := url("https://github.com/martinberger"),
       description  := "TBC",
       version      := "TBC",
-      scalaVersion := "3.4.2"
+      scalaVersion := "3.6.2"
     )
 
 scalacOptions ++= Seq(
@@ -25,10 +25,10 @@ scalacOptions ++= Seq(
   "-new-syntax",              // require `then` and `do` in control expressions.
   "-print-lines",             // show source code line numbers.
   "-unchecked",               // enable additional warnings where generated code depends on assumptions
-  "-Ykind-projector",         // allow `*` as wildcard to be compatible with kind projector
+  "-Xkind-projector",         // allow `*` as wildcard to be compatible with kind projector
   "-Xfatal-warnings",         // fail the compilation if there are any warnings
   "-Xmigration",              // warn about constructs whose behavior may have changed since version
-  "-source:3.0"
+  "-source:3.7"               // old syntax no longer allowed
 )
 
 lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.15.4"
