@@ -3,4 +3,4 @@ object Main:
 
     def main(argv: Array[String]): Unit =
         val failed = run(allTests)
-        System.exit(failed)
+        sys.exit(failed)
