@@ -12,7 +12,7 @@ lazy val root = project
 //    url   := url("https://github.com/martinberger"),
       description  := "TBC",
       version      := "TBC",
-      scalaVersion := "3.7.1"
+      scalaVersion := "3.7.2"
     )
 
 scalacOptions ++= Seq(
