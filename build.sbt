@@ -12,7 +12,7 @@ lazy val root = project
 //    url   := url("https://github.com/martinberger"),
       description  := "TBC",
       version      := "TBC",
-      scalaVersion := "3.7.2"
+      scalaVersion := "3.8.0"
     )
 
 scalacOptions ++= Seq(
@@ -26,9 +26,9 @@ scalacOptions ++= Seq(
   "-print-lines",             // show source code line numbers.
   "-unchecked",               // enable additional warnings where generated code depends on assumptions
   "-Xkind-projector",         // allow `*` as wildcard to be compatible with kind projector
-  "-Xfatal-warnings",         // fail the compilation if there are any warnings
+  "-Werror",                  // fail the compilation if there are any warnings
   "-Xmigration",              // warn about constructs whose behavior may have changed since version
-  "-source:3.7",               // old syntax no longer allowed
+  "-source:3.7",              // old syntax no longer allowed
   "-Yexplicit-nulls"          // enable explicit nulls, see https://docs.scala-lang.org/scala3/reference/experimental/explicit-nulls.html
 )
 
