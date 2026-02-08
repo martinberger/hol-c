@@ -1,7 +1,17 @@
+# ----------- For fix-only-when-asked use: -----------
+
+default_stages: [pre-commit]
+
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-    hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-yaml
+    stages: [pre-commit, manual]
+
+  - id: trailing-whitespace
+    args: [--markdown-linebreak-ext=md]
+    stages: [manual, pre-commit]
+
+  - id: end-of-file-fixer
+    stages: [manual, pre-commit]
