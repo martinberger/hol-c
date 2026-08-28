@@ -12,7 +12,7 @@ lazy val root = project
 //    url   := url("https://github.com/martinberger"),
       description  := "TBC",
       version      := "TBC",
-      scalaVersion := "3.8.0"
+      scalaVersion := "3.9.0"
     )
 
 scalacOptions ++= Seq(
@@ -23,7 +23,6 @@ scalacOptions ++= Seq(
   "-feature",                 // emit warning and location for usages of features that should be imported explicitly
   "-indent",                  // allow significant indentation.
   "-new-syntax",              // require `then` and `do` in control expressions.
-  "-print-lines",             // show source code line numbers.
   "-unchecked",               // enable additional warnings where generated code depends on assumptions
   "-Xkind-projector",         // allow `*` as wildcard to be compatible with kind projector
   "-Werror",                  // fail the compilation if there are any warnings
